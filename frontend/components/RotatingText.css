@@ -1,0 +1,34 @@
+.text-rotate {
+  display: inline-block;
+  position: relative;
+}
+
+.text-rotate-lines {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.text-rotate-word {
+  display: inline-block;
+}
+
+.text-rotate-element {
+  display: inline-block;
+}
+
+.text-rotate-space {
+  display: inline-block;
+}
+
+.text-rotate-sr-only {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+

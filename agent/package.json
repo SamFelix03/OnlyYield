@@ -1,0 +1,15 @@
+{
+  "name": "onlyyield-agent",
+  "version": "1.0.0",
+  "description": "LI.FI swap helper for OnlyYield agent",
+  "main": "lifi_swap.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@lifi/sdk": "workspace:*",
+    "@lifi/data-types": "workspace:*",
+    "viem": "^2.0.0"
+  },
+  "type": "commonjs"
+}

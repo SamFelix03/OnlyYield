@@ -1,0 +1,102 @@
+📋 Configuration:
+   RPC URL: https://base-sepolia.infura.io/v3/b4880ead6a9a4f77a6de39dec6f3d0d0
+   Orchestrator: 0x93e8746BB03732aC8e2BF391fA851A7163d1ecF9
+   Strategy: 0x8193D7A3dBe672449B873Ef5d93721E6f4044e4b
+   USDC: 0xba50cd2a20f6da35d788639e581bca8d0b5d4d5f
+   Depositor 1 will deposit: 100 USDC → Recipient: 0x6984aba3CC4F08596b928ceEb956C58122C27ac2
+   Depositor 2 will deposit: 200 USDC → Recipients: 0xF08936cA98E0a97F24c5D997Db2252ae6aCCaa21, 0x0994b358dC0a58Dd2bD3cc222ef8ab6F1eB7BFEb
+
+👤 Depositor 1 Address: 0x0d8cE3C60C17f71171C5bAC1B40C05937b873711
+👤 Depositor 2 Address: 0xF08936cA98E0a97F24c5D997Db2252ae6aCCaa21
+🤖 Operator Address: 0x08720Fc72808B17ac3b1467736449639d62Bd956
+
+💰 Step 1: Depositor 1 Depositing USDC (via Operator)
+   ✅ Already approved: 115792089237316195423570985008687907853269984665640564039457584007912129.639935 USDC
+   📊 Strategy total assets before: 1849.155534 USDC
+⏳ Waiting for transaction: 0xe8ddecb7c09a6170a1cc779bb7eb3907ce37e8d53decc6276c0e468d8e9a17b5
+✅ Transaction confirmed in block 37145772
+   📊 Strategy total assets after: 1949.155535 USDC
+   📊 Actual deposit amount: 100.000001 USDC (expected: 100 USDC)
+   ✅ Depositor 1 deposited 100.000001 USDC
+
+💰 Step 2: Depositor 2 Depositing USDC (via Operator)
+   ✅ Already approved: 115792089237316195423570985008687907853269984665640564039457584007912129.639935 USDC
+   📊 Strategy total assets before: 1949.155536 USDC
+⏳ Waiting for transaction: 0xa180832eb15d6e3591f91ae8236413c556149f770185570ef5f64adeb7f3031a
+✅ Transaction confirmed in block 37145775
+   📊 Strategy total assets after: 1949.155537 USDC
+   📊 Actual deposit amount: 0.000001 USDC (expected: 200 USDC)
+   ✅ Depositor 2 deposited 0.000001 USDC
+
+🤖 Step 3: Operator Supplying Funds to Aave
+   📊 Strategy total assets: 1949.155537 USDC
+   📊 Vault idle balance: 100 USDC
+   📊 Vault aToken balance (already in Aave): 1849.155538 USDC
+   📊 Total in vault: 1949.155538 USDC
+⏳ Waiting for transaction: 0x03d5801adc88ec829faaa9e6f0cc4b4af6b383e76553d85c0dd5197a72bd2287
+✅ Transaction confirmed in block 37145777
+   ✅ Supplied 100 USDC to Aave
+   📊 Vault aToken balance after: 1949.155539 USDC
+   📊 Total now in Aave: 1949.155539 USDC
+
+⏱️  Step 4: Waiting 1 minute for yield to accrue...
+   ✅ Wait complete
+
+📊 Step 5: Operator Calling report() to Set Baseline
+⏳ Waiting for transaction: 0x8913cd852d37c0a8b126dfb45ddabcfbffade4ff653faa3699f643256b8e9e51
+✅ Transaction confirmed in block 37145812
+   ✅ Baseline report called
+
+⏱️  Step 5.5: Waiting 2 more minutes for yield to accrue...
+   ✅ Wait complete
+
+📊 Step 5.6: Operator Calling report() Again to Capture Yield
+⏳ Waiting for transaction: 0xd37c546fe3cc6964dd2808026e03608aecb4ec5276730bc4f1998d7b4ad93c11
+✅ Transaction confirmed in block 37145876
+   ✅ Yield report called
+
+📊 Step 6: Checking User Yields
+   Depositor 1 Yield: 22.127621 USDC
+   Depositor 2 Yield: 120.447127 USDC
+
+🎯 Step 7: Orchestrator Claiming and Distributing Yield
+
+   Claiming yield for Depositor 1 (22.127621 USDC)...
+⏳ Waiting for transaction: 0xc7d24a90351821413fa71e9cd490a92c9ca9bafc97ec267fe82af5e26bb57263
+✅ Transaction confirmed in block 37145878
+   ✅ Claimed 22.127622 USDC
+   📊 Operator balance: 73.253044 USDC
+⏳ Waiting for transaction: 0x4eabffcb1157972a1963976b9de5fdc7ac7f5db55ce9046844948fe93072c967
+✅ Transaction confirmed in block 37145880
+   ✅ Sent 22.127622 USDC to 0x6984aba3CC4F08596b928ceEb956C58122C27ac2
+
+   Claiming yield for Depositor 2 (120.447127 USDC)...
+⏳ Waiting for transaction: 0x2357c4bda8b845ae0b11b1e0acbdcd0a65f9b5fdf22a5cb250bce0af081327f8
+✅ Transaction confirmed in block 37145881
+   ✅ Claimed 120.447127 USDC
+   📊 Operator balance: 171.572549 USDC
+⏳ Waiting for transaction: 0xa2abe18977787ee3ad005c59daf63d75092310cdf0d6a04a5c1123096057c0c9
+✅ Transaction confirmed in block 37145883
+   ✅ Sent 60.223564 USDC to 0xF08936cA98E0a97F24c5D997Db2252ae6aCCaa21
+⏳ Waiting for transaction: 0x1966645cfbebc1384c7d7d8ee0ca7d549a04ccd672fcec28a473d9efbf276e25
+✅ Transaction confirmed in block 37145884
+   ✅ Sent 60.223563 USDC to 0x0994b358dC0a58Dd2bD3cc222ef8ab6F1eB7BFEb
+
+
+📊 Final Summary:
+
+   Depositor 1:
+      Deposit: 100 USDC
+      Yield Generated: 22.127621 USDC
+      Yield Claimed: 22.127622 USDC
+      → Sent to Recipient 1: 22.127622 USDC
+
+   Depositor 2:
+      Deposit: 200 USDC
+      Yield Generated: 120.447127 USDC
+      Yield Claimed: 120.447127 USDC
+      → Sent to Recipient 2: 60.223564 USDC (50% + remainder)
+      → Sent to Recipient 3: 60.223563 USDC (50%)
+      → Total distributed: 120.447127 USDC
+
+✅ Flow Complete!

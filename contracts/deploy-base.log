@@ -1,0 +1,239 @@
+[⠊] Compiling...
+No files changed, compilation skipped
+Script ran successfully.
+
+== Logs ==
+  Deploying from: 0x6100Ae3b9EAC8B3eB7673eaCe7e3561b571aAa5B
+  Operator (AI agent): 0x6100Ae3b9EAC8B3eB7673eaCe7e3561b571aAa5B
+  Deployer balance: 0 ETH
+  Recipients: 0x0d8cE3C60C17f71171C5bAC1B40C05937b873711 0xF08936cA98E0a97F24c5D997Db2252ae6aCCaa21 0x0994b358dC0a58Dd2bD3cc222ef8ab6F1eB7BFEb
+  
+=== Step 1: Deploying YieldDistributor ===
+  YieldDistributor deployed at: 0x787457C404f9ddB42978Ed3be15359AD166F9910
+  Recipients count: 3
+  
+=== Step 2: Deploying YieldVault ===
+  YieldVault deployed at: 0xE663e41927f1E20cC9E3D27c18829ad2A1A0F544
+  
+=== Step 3: Deploying YieldStrategy ===
+  YieldStrategy deployed at: 0xB8FAd7401DA195CfF5b7E62e4c7094920dC8FEe0
+  
+=== Step 4: Configuring Vault ===
+  Strategy added to vault
+  
+=== Step 5: Deploying YieldOrchestrator ===
+  YieldOrchestrator deployed at: 0xEc67546d493484c4dBB749fdD6765D61E24369DA
+  
+=== Step 6: Registering Strategy ===
+  Strategy registered in orchestrator
+  
+=== Step 7: Deploying YieldReallocator ===
+  YieldReallocator deployed at: 0x9c95160Fc6759e655Dbb77Bb0C2e1A21665F71a4
+  
+=== Step 8: Granting Roles ===
+  Orchestrator and Reallocator granted operator role in strategy
+  Orchestrator and operator granted operator role in vault
+  
+=== Deployment Complete ===
+  YieldVault: 0xE663e41927f1E20cC9E3D27c18829ad2A1A0F544
+  YieldDistributor: 0x787457C404f9ddB42978Ed3be15359AD166F9910
+  YieldStrategy: 0xB8FAd7401DA195CfF5b7E62e4c7094920dC8FEe0
+  YieldOrchestrator: 0xEc67546d493484c4dBB749fdD6765D61E24369DA
+  YieldReallocator: 0x9c95160Fc6759e655Dbb77Bb0C2e1A21665F71a4
+  
+=== Next Steps ===
+  1. Fund operator wallet with USDC
+  2. Use InteractWithSystem.s.sol to perform operations
+  3. Recipients can be updated via distributor.setRecipients()
+
+## Setting up 1 EVM.
+
+==========================
+
+Chain 8453
+
+Estimated gas price: 0.032919862 gwei
+
+Estimated total gas used for script: 12822307
+
+Estimated amount required: 0.000422108576961634 ETH
+
+==========================
+
+##### base
+✅  [Success] Hash: 0xeb56fa1d3896dcfacb772d6412d7ca93614308782d1c2b591f01ea8631f94a30
+Contract Address: 0x787457C404f9ddB42978Ed3be15359AD166F9910
+Block: 41743063
+Paid: 0.00001889861966168 ETH (1117960 gas * 0.016904558 gwei)
+
+
+##### base
+✅  [Success] Hash: 0x0b92945ec4833d5463e3fafa0caf5aa09d003d67a7811aa9f4f0344cae2b1cbb
+Contract Address: 0xE663e41927f1E20cC9E3D27c18829ad2A1A0F544
+Block: 41743064
+Paid: 0.000056202710974568 ETH (3322804 gas * 0.016914242 gwei)
+
+
+##### base
+✅  [Success] Hash: 0x6c933cd3ef37a6b34d2a5f4d2432deb8f51fa4a2b305bfd4dc9a1e61bdcb6717
+Contract Address: 0xB8FAd7401DA195CfF5b7E62e4c7094920dC8FEe0
+Block: 41743066
+Paid: 0.000035532390890727 ETH (2105793 gas * 0.016873639 gwei)
+
+
+##### base
+✅  [Success] Hash: 0xc19223821349ad14179e07e4abcda0e6dd45754b10247556b4e2967ec50fae5f
+Block: 41743068
+Paid: 0.000000837080363718 ETH (49653 gas * 0.016858606 gwei)
+
+
+##### base
+✅  [Success] Hash: 0x21a374120589e73e1c7e230c50ee010f28464df3b818e0fdeb48f4b2f8d0c7c0
+Contract Address: 0xEc67546d493484c4dBB749fdD6765D61E24369DA
+Block: 41743069
+Paid: 0.0000276049240524 ETH (1638768 gas * 0.016844925 gwei)
+
+
+##### base
+✅  [Success] Hash: 0xd698bdbbfb0e749d52a190cbe6a1304dfc90dfe839002a09cb2690d2449de387
+Block: 41743070
+Paid: 0.000001995961040415 ETH (118467 gas * 0.016848245 gwei)
+
+
+##### base
+✅  [Success] Hash: 0x5add10d6dcca5c5ca63e98a28bf1c643812173307c7f4f8679e49b4f8bbf8a5c
+Contract Address: 0x9c95160Fc6759e655Dbb77Bb0C2e1A21665F71a4
+Block: 41743072
+Paid: 0.00002187569339975 ETH (1301290 gas * 0.016810775 gwei)
+
+
+##### base
+✅  [Success] Hash: 0x6b94271357fbffa363682c4d3fb1f6bbf20c99b90635131798ff3fad6418ba1d
+Block: 41743073
+Paid: 0.000000820078298622 ETH (48834 gas * 0.016793183 gwei)
+
+
+##### base
+✅  [Success] Hash: 0x2bbe36d687d502b5c3833f7f46e739021b8dbc8fc56d1ac3734dcf0ecda267a9
+Block: 41743074
+Paid: 0.000000821404581228 ETH (48834 gas * 0.016820342 gwei)
+
+
+##### base
+✅  [Success] Hash: 0x788af2ecf13bf661c8fa6f6155321f531e702250487acc0b5b7f908059c086ca
+Block: 41743075
+Paid: 0.000000825253898568 ETH (49092 gas * 0.016810354 gwei)
+
+
+##### base
+✅  [Success] Hash: 0x273e2b623624d6abe706ff855559950b5476c1a6cefe94fa14f96c6a30016aed
+Block: 41743076
+Paid: 0.00000045250987705 ETH (26950 gas * 0.016790719 gwei)
+
+✅ Sequence #1 on base | Total Paid: 0.000165866627038726 ETH (9828445 gas * avg 0.016842689 gwei)
+                                                                                                                  
+
+==========================
+
+ONCHAIN EXECUTION COMPLETE & SUCCESSFUL.
+##
+Start verification for (5) contracts
+Start verifying contract `0x787457C404f9ddB42978Ed3be15359AD166F9910` deployed on base
+EVM version: cancun
+Compiler version: 0.8.24
+Optimizations:    200
+Constructor args: 0000000000000000000000006100ae3b9eac8b3eb7673eace7e3561b571aaa5b000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000030000000000000000000000000d8ce3c60c17f71171c5bac1b40c05937b873711000000000000000000000000f08936ca98e0a97f24c5d997db2252ae6accaa210000000000000000000000000994b358dc0a58dd2bd3cc222ef8ab6f1eb7bfeb
+
+Submitting verification for [src/core/YieldDistributor.sol:YieldDistributor] 0x787457C404f9ddB42978Ed3be15359AD166F9910.
+Submitted contract for verification:
+        Response: `OK`
+        GUID: `j3qwzz4cxplm77qktbx4bnltbkcltunpkqr4xmqnrusqic3kps`
+        URL: https://basescan.org/address/0x787457c404f9ddb42978ed3be15359ad166f9910
+Contract verification status:
+Response: `OK`
+Details: `Pass - Verified`
+Contract successfully verified
+Start verifying contract `0xE663e41927f1E20cC9E3D27c18829ad2A1A0F544` deployed on base
+EVM version: cancun
+Compiler version: 0.8.24
+Optimizations:    200
+Constructor args: 000000000000000000000000833589fcd6edb6e08f4c7c32d4f71b54bda029130000000000000000000000004e65fe4dba92790696d040ac24aa414708f5c0ab0000000000000000000000006100ae3b9eac8b3eb7673eace7e3561b571aaa5b00000000000000000000000000000000000000000000000000000000000003e8000000000000000000000000a238dd80c259a72e81d7e4664a9801593f98d1c50000000000000000000000006100ae3b9eac8b3eb7673eace7e3561b571aaa5b
+
+Submitting verification for [src/core/YieldVault.sol:YieldVault] 0xE663e41927f1E20cC9E3D27c18829ad2A1A0F544.
+Submitted contract for verification:
+        Response: `OK`
+        GUID: `na92p4qd3s8nutpnqwjgy1wvjr9mcpk1kemgjnevee1aw3dwpa`
+        URL: https://basescan.org/address/0xe663e41927f1e20cc9e3d27c18829ad2a1a0f544
+Contract verification status:
+Response: `NOTOK`
+Details: `Pending in queue`
+Warning: Verification is still pending...; waiting 15 seconds before trying again (7 tries remaining)
+Contract verification status:
+Response: `OK`
+Details: `Pass - Verified`
+Contract successfully verified
+Start verifying contract `0xB8FAd7401DA195CfF5b7E62e4c7094920dC8FEe0` deployed on base
+EVM version: cancun
+Compiler version: 0.8.24
+Optimizations:    200
+Constructor args: 000000000000000000000000833589fcd6edb6e08f4c7c32d4f71b54bda0291300000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000000e0000000000000000000000000e663e41927f1e20cc9e3d27c18829ad2a1a0f5440000000000000000000000006100ae3b9eac8b3eb7673eace7e3561b571aaa5b00000000000000000000000000000000000000000000000000000000000000135969656c6420555344432053747261746567790000000000000000000000000000000000000000000000000000000000000000000000000000000000000000057955534443000000000000000000000000000000000000000000000000000000
+
+Submitting verification for [src/core/YieldStrategy.sol:YieldStrategy] 0xB8FAd7401DA195CfF5b7E62e4c7094920dC8FEe0.
+Submitted contract for verification:
+        Response: `OK`
+        GUID: `htddgymgxpgc8m12taktdbpnkwq8q9ylv95ey7tnyna5dww7bs`
+        URL: https://basescan.org/address/0xb8fad7401da195cff5b7e62e4c7094920dc8fee0
+Contract verification status:
+Response: `NOTOK`
+Details: `Pending in queue`
+Warning: Verification is still pending...; waiting 15 seconds before trying again (7 tries remaining)
+Contract verification status:
+Response: `OK`
+Details: `Pass - Verified`
+Contract successfully verified
+Start verifying contract `0xEc67546d493484c4dBB749fdD6765D61E24369DA` deployed on base
+EVM version: cancun
+Compiler version: 0.8.24
+Optimizations:    200
+Constructor args: 0000000000000000000000006100ae3b9eac8b3eb7673eace7e3561b571aaa5b0000000000000000000000006100ae3b9eac8b3eb7673eace7e3561b571aaa5b0000000000000000000000002626664c2603336e57b271c5c0b26f421741e4810000000000000000000000000000000000000000000000000000000000000bb8
+
+Submitting verification for [src/core/YieldOrchestrator.sol:YieldOrchestrator] 0xEc67546d493484c4dBB749fdD6765D61E24369DA.
+Warning: Could not detect the deployment.; waiting 5 seconds before trying again (4 tries remaining)
+
+Submitting verification for [src/core/YieldOrchestrator.sol:YieldOrchestrator] 0xEc67546d493484c4dBB749fdD6765D61E24369DA.
+Submitted contract for verification:
+        Response: `OK`
+        GUID: `b7s6fmeeiqu32fy72f6zuuhpti1mygcdy2cdzfp1265qcbdkcp`
+        URL: https://basescan.org/address/0xec67546d493484c4dbb749fdd6765d61e24369da
+Contract verification status:
+Response: `NOTOK`
+Details: `Pending in queue`
+Warning: Verification is still pending...; waiting 15 seconds before trying again (7 tries remaining)
+Contract verification status:
+Response: `OK`
+Details: `Pass - Verified`
+Contract successfully verified
+Start verifying contract `0x9c95160Fc6759e655Dbb77Bb0C2e1A21665F71a4` deployed on base
+EVM version: cancun
+Compiler version: 0.8.24
+Optimizations:    200
+Constructor args: 0000000000000000000000006100ae3b9eac8b3eb7673eace7e3561b571aaa5b0000000000000000000000006100ae3b9eac8b3eb7673eace7e3561b571aaa5b
+
+Submitting verification for [src/core/YieldReallocator.sol:YieldReallocator] 0x9c95160Fc6759e655Dbb77Bb0C2e1A21665F71a4.
+Submitted contract for verification:
+        Response: `OK`
+        GUID: `ckucc9lflnsvnk6uvqqjxfvm1f5ihvxgydnxylq4vbaqbrkiwy`
+        URL: https://basescan.org/address/0x9c95160fc6759e655dbb77bb0c2e1a21665f71a4
+Contract verification status:
+Response: `NOTOK`
+Details: `Pending in queue`
+Warning: Verification is still pending...; waiting 15 seconds before trying again (7 tries remaining)
+Contract verification status:
+Response: `OK`
+Details: `Pass - Verified`
+Contract successfully verified
+All (5) contracts were verified!
+
+Transactions saved to: /Users/sam/yield-streamer-donation-flow/broadcast/DeployCompleteSystem.s.sol/8453/run-latest.json
+
+Sensitive values saved to: /Users/sam/yield-streamer-donation-flow/cache/DeployCompleteSystem.s.sol/8453/run-latest.json

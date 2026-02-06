@@ -1,0 +1,63 @@
+[1/4] Harvesting strategy...
+✅ Harvested: 0x05e01fcc4aa3106c2d0f354ada868558de62ed5dc86ccdb6f8a1ea1c0933f7d0
+[2/4] Fetching non-withdrawn donations with recipients...
+Found 8 active donation(s)
+⏭️  Donation 365f68e2-5423-4021-8a52-2b7f198e9ce5: No recipients selected; skipping
+[3/4] Processing donation 11d128c6-c93e-4630-a1f4-964fdc78e091 (donor: 0x2514...6844)
+  Actual yield from contract: 0 USDC
+  Recipients: 1
+  🎭 DEMO MODE: Adding 0.1 USDC per recipient (0.1 USDC total) for demo purposes
+  📊 Final yield amount to distribute: 0.1 USDC (0 actual + 0.1 demo)
+  ℹ️  No actual yield to claim, using demo amount only
+[4/4] Distributing 0.1 USDC (demo yield amount) to 1 recipient(s)...
+  🎭 DEMO MODE: Each recipient will receive ~0.1 USDC
+  🎭 DEMO MODE: Transferring 0.1 USDC (demo yield) to 0x0872...d956 on Base...
+  ✅ Sent 0.1 USDC (demo yield amount) to 0x0872...d956 on Base (0x26c6fb6acc9d34bc2322950d374e85ac626dd71ec160174ac2b88d4e96521d67)
+⏭️  Donation abf187e8-df7d-4146-b50a-9aa9a31f676a: No recipients selected; skipping
+[3/4] Processing donation 4ba7663d-2978-42a2-80b1-a75939eb6219 (donor: 0x2514...6844)
+  Actual yield from contract: 0 USDC
+  Recipients: 1
+  🎭 DEMO MODE: Adding 0.1 USDC per recipient (0.1 USDC total) for demo purposes
+  📊 Final yield amount to distribute: 0.1 USDC (0 actual + 0.1 demo)
+  ℹ️  No actual yield to claim, using demo amount only
+[4/4] Distributing 0.1 USDC (demo yield amount) to 1 recipient(s)...
+  🎭 DEMO MODE: Each recipient will receive ~0.1 USDC
+  🎭 DEMO MODE: Transferring 0.1 USDC (demo yield) to 0x2514...6844 on Base...
+  ✅ Sent 0.1 USDC (demo yield amount) to 0x2514...6844 on Base (0x35f1adb3f4dc49613e56fce66197be29b9205c580abfec832d6d652a0d4fcb7a)
+[3/4] Processing donation 29ebd7ec-91bb-4a3b-a6d8-1648f4055c04 (donor: 0x8e05...17d3)
+  Actual yield from contract: 0.19027 USDC
+  Recipients: 1
+  🎭 DEMO MODE: Adding 0.1 USDC per recipient (0.1 USDC total) for demo purposes
+  📊 Final yield amount to distribute: 0.1 USDC (0.19027 actual + 0.1 demo)
+  ✅ Claimed actual yield: 0x8a6dd683415f2b63bc3d4b436c3c61e02d18c76170862c4753ecdc26b327ef5b
+[4/4] Distributing 0.1 USDC (demo yield amount) to 1 recipient(s)...
+  🎭 DEMO MODE: Each recipient will receive ~0.1 USDC
+  🎭 DEMO MODE: Transferring 0.1 USDC (demo yield) to 0x0872...d956 on Base...
+  ✅ Sent 0.1 USDC (demo yield amount) to 0x0872...d956 on Base (0xeee5aa7e6776f86fe5822644adfa4b17413199c146ee87b781a8973352ceddfc)
+⏭️  Donation 24779333-a50b-4b0c-8044-5b5086264ede: No recipients selected; skipping
+[3/4] Processing donation 93da4952-428b-4722-8462-f17fb3351f16 (donor: 0x8e05...17d3)
+  Actual yield from contract: 0 USDC
+  Recipients: 1
+  🎭 DEMO MODE: Adding 0.1 USDC per recipient (0.1 USDC total) for demo purposes
+  📊 Final yield amount to distribute: 0.1 USDC (0 actual + 0.1 demo)
+  ℹ️  No actual yield to claim, using demo amount only
+[4/4] Distributing 0.1 USDC (demo yield amount) to 1 recipient(s)...
+  🎭 DEMO MODE: Each recipient will receive ~0.1 USDC
+  🎭 DEMO MODE: Transferring 0.1 USDC (demo yield) to 0x2514...6844 on Base...
+  ✅ Sent 0.1 USDC (demo yield amount) to 0x2514...6844 on Base (0xd759131ef47fc118f7d755604dca122541fe95b6ed13fc77ca39538231586b1a)
+[3/4] Processing donation 16bedba9-e3c8-4121-a3de-e6173179978e (donor: 0xf2d1...c1fb)
+  Actual yield from contract: 0 USDC
+  Recipients: 1
+  🎭 DEMO MODE: Adding 0.1 USDC per recipient (0.1 USDC total) for demo purposes
+  📊 Final yield amount to distribute: 0.1 USDC (0 actual + 0.1 demo)
+  ℹ️  No actual yield to claim, using demo amount only
+[4/4] Distributing 0.1 USDC (demo yield amount) to 1 recipient(s)...
+  🎭 DEMO MODE: Each recipient will receive ~0.1 USDC
+  🎭 DEMO MODE: Bridging 0.1 USDC (demo yield) to Optimism for 0x622b...f18d...
+  📍 Route found: 1 step(s)
+  📝 Step cf2e3d3a-d3e7-479f-b4cc-11f4321d408e:0 completed: 0x20eedaf3548e32d1870c0e100742791686d4276588cc7e6be11805b7108732c0
+  📝 Step cf2e3d3a-d3e7-479f-b4cc-11f4321d408e:0 completed: 0x1803e260332248f4c0ceb1674186cb2a620ebe67e6b7b1bb2e33e816faad7e7b
+  🔗 LI.FI Explorer: https://scan.li.fi/tx/0x20eedaf3548e32d1870c0e100742791686d4276588cc7e6be11805b7108732c0
+  ✅ Bridged 0.1 USDC (demo yield amount) to 0x622b...f18d on Optimism 🔗 Track: https://scan.li.fi/tx/0x20eedaf3548e32d1870c0e100742791686d4276588cc7e6be11805b7108732c0
+
+✅ Distribution complete! Processed 5 donation(s)

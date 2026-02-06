@@ -1,0 +1,110 @@
+[19:33:47] 🚀 Starting deposit process...
+[19:33:47] 📋 Configuration:
+[19:33:47] Wallet: 0xf2d1...c1fb
+[19:33:47] Source Chain: Arbitrum (Chain ID: 42161)
+[19:33:47] Amount: 0.1 USDC
+[19:33:47] Recipients: 1
+[19:33:47] 1. 0x622b...f18d
+[19:33:47] [1/6] Getting bridge + deposit quote from API...
+[19:33:47] Looking up USDC token on Arbitrum...
+[19:33:47] ✅ USDC found: 0xaf88d065e77c8cC2239327C5EDb3A432268e5831
+[19:33:47] Creating public client for Arbitrum...
+[19:33:47] Reading USDC decimals...
+[19:33:47] ✅ USDC decimals: 6
+[19:33:47] Amount in base units: 100000
+[19:33:47] Calling /api/bridge-deposit endpoint...
+[19:33:47] Request: { "donor_wallet_address": "0xf2d11bdd...", "source_chain": "arbitrum", "amount_in_base_units": "100000", "amount_in": "0.1", "recipient_count": 1 }
+[19:33:49] Response status: 200 OK
+[19:33:49] ✅ Quote received successfully
+[19:33:49] Quote details:
+[19:33:49] Tool: stargateV2
+[19:33:49] From Chain: 42161
+[19:33:49] To Chain: 8453
+[19:33:49] From Amount: 101312
+[19:33:49] To Amount: N/A
+[19:33:49] Steps: 3
+[19:33:49] [2/6] Setting up LI.FI SDK...
+[19:33:49] Checking wallet provider...
+[19:33:49] ✅ Wallet provider found
+[19:33:49] Requesting chain switch to Arbitrum...
+[19:33:50] ✅ Switched to Arbitrum
+[19:33:50] Creating wallet client...
+[19:33:50] ✅ Wallet client created
+[19:33:50] Configuring LI.FI SDK...
+[19:33:50] ✅ LI.FI SDK configured
+[19:33:50] [3/6] Checking token allowance...
+[19:33:50] Token: USDC (0xaf88d065e77c8cC2239327C5EDb3A432268e5831)
+[19:33:50] Approval address: 0x1231DEB6f5749EF6cE6943a275A1D3E7486F4EaE
+[19:33:50] Required amount: 101312
+[19:33:50] Current allowance: 0
+[19:33:50] ⚠️ Insufficient allowance, requesting approval...
+[19:33:59] ✅ Approval transaction sent: 0x8241ad15221dc83797777cb94e83cdd61b20f0391e32b2b28627677a32a04c93
+[19:33:59] Waiting for approval confirmation...
+[19:34:02] ✅ Approval confirmed in block 429255118
+[19:34:02] Waiting for state propagation (3 seconds)...
+[19:34:05] ✅ State propagation complete
+[19:34:05] [4/6] Executing bridge + deposit transaction...
+[19:34:05] Transaction details:
+[19:34:05] To: 0x1231DEB6f5749EF6cE6943a275A1D3E7486F4EaE
+[19:34:05] Value: 0x21ac3c2db890
+[19:34:05] Gas Limit: 0x329091
+[19:34:05] Data length: 4170 bytes
+[19:34:05] Sending transaction to wallet...
+[19:34:12] ✅ Transaction sent: 0xec8af9db42d4abe108b41bbf2816d57d667bd51a8cc433e085682a8e2cb754bf
+[19:34:12] Waiting for confirmation...
+[19:34:13] ✅ Transaction confirmed
+[19:34:13] Block: 429255166
+[19:34:13] Gas used: 498493
+[19:34:13] [5/6] Monitoring bridge execution status...
+[19:34:13] Status check #1...
+[19:34:21] Status: PENDING (WAIT_SOURCE_CONFIRMATIONS)
+[19:34:21] Message: The bridge deposit has been received. The bridge is waiting for more confirmations to start the off-chain logic.
+[19:34:21] 🔗 Found sending txLink: https://arbiscan.io/tx/0xec8af9db42d4abe108b41bbf2816d57d667bd51a8cc433e085682a8e2cb754bf
+[19:34:21] 🔗✅ LI.FI EXPLORER LINK: null
+[19:34:21] Fee costs:
+[19:34:21] 1. LIFI Fixed Fee: 253 USDC (0.0003 USD)
+[19:34:21] Status check #2...
+[19:34:27] Status: PENDING (UNKNOWN_ERROR)
+[19:34:27] Message: Failed to get LayerZero transfer status: [Decoder] Failed to parse the data: [ { "code": "invalid_value", "values": [ "DELIVERED", "IN_FLIGHT", "FAILED", "CONFIRMING", "BLOCKED", "PAYLOAD_STORED" ], "path": [ "data", 0, "status", "name" ], "message": "Invalid option: expected one of \"DELIVERED\"|\"IN_FLIGHT\"|\"FAILED\"|\"CONFIRMING\"|\"BLOCKED\"|\"PAYLOAD_STORED\"" }, { "expected": "object", "code": "invalid_type", "path": [ "data", 0, "destination", "tx" ], "message": "Invalid input: expected object, received undefined" } ]
+[19:34:27] 🔗 Found sending txLink: https://arbiscan.io/tx/0xec8af9db42d4abe108b41bbf2816d57d667bd51a8cc433e085682a8e2cb754bf
+[19:34:27] 🔗✅ LI.FI EXPLORER LINK: null
+[19:34:27] Fee costs:
+[19:34:27] 1. LIFI Fixed Fee: 253 USDC (0.0003 USD)
+[19:34:27] Status check #3...
+[19:34:33] Status: PENDING (UNKNOWN_ERROR)
+[19:34:33] Message: Failed to get LayerZero transfer status: [Decoder] Failed to parse the data: [ { "code": "invalid_value", "values": [ "DELIVERED", "IN_FLIGHT", "FAILED", "CONFIRMING", "BLOCKED", "PAYLOAD_STORED" ], "path": [ "data", 0, "status", "name" ], "message": "Invalid option: expected one of \"DELIVERED\"|\"IN_FLIGHT\"|\"FAILED\"|\"CONFIRMING\"|\"BLOCKED\"|\"PAYLOAD_STORED\"" }, { "expected": "object", "code": "invalid_type", "path": [ "data", 0, "destination", "tx" ], "message": "Invalid input: expected object, received undefined" } ]
+[19:34:33] 🔗 Found sending txLink: https://arbiscan.io/tx/0xec8af9db42d4abe108b41bbf2816d57d667bd51a8cc433e085682a8e2cb754bf
+[19:34:33] 🔗✅ LI.FI EXPLORER LINK: null
+[19:34:33] Fee costs:
+[19:34:33] 1. LIFI Fixed Fee: 253 USDC (0.0003 USD)
+[19:34:33] Status check #4...
+[19:34:40] Status: PENDING (UNKNOWN_ERROR)
+[19:34:40] Message: Failed to get LayerZero transfer status: [Decoder] Failed to parse the data: [ { "code": "invalid_value", "values": [ "DELIVERED", "IN_FLIGHT", "FAILED", "CONFIRMING", "BLOCKED", "PAYLOAD_STORED" ], "path": [ "data", 0, "status", "name" ], "message": "Invalid option: expected one of \"DELIVERED\"|\"IN_FLIGHT\"|\"FAILED\"|\"CONFIRMING\"|\"BLOCKED\"|\"PAYLOAD_STORED\"" }, { "expected": "object", "code": "invalid_type", "path": [ "data", 0, "destination", "tx" ], "message": "Invalid input: expected object, received undefined" } ]
+[19:34:40] 🔗 Found sending txLink: https://arbiscan.io/tx/0xec8af9db42d4abe108b41bbf2816d57d667bd51a8cc433e085682a8e2cb754bf
+[19:34:40] 🔗✅ LI.FI EXPLORER LINK: null
+[19:34:40] Fee costs:
+[19:34:40] 1. LIFI Fixed Fee: 253 USDC (0.0003 USD)
+[19:34:40] Status check #5...
+[19:34:47] Status: PENDING (UNKNOWN_ERROR)
+[19:34:47] Message: Failed to get LayerZero transfer status: [Decoder] Failed to parse the data: [ { "code": "invalid_value", "values": [ "DELIVERED", "IN_FLIGHT", "FAILED", "CONFIRMING", "BLOCKED", "PAYLOAD_STORED" ], "path": [ "data", 0, "status", "name" ], "message": "Invalid option: expected one of \"DELIVERED\"|\"IN_FLIGHT\"|\"FAILED\"|\"CONFIRMING\"|\"BLOCKED\"|\"PAYLOAD_STORED\"" }, { "expected": "object", "code": "invalid_type", "path": [ "data", 0, "destination", "tx" ], "message": "Invalid input: expected object, received undefined" } ]
+[19:34:47] 🔗 Found sending txLink: https://arbiscan.io/tx/0xec8af9db42d4abe108b41bbf2816d57d667bd51a8cc433e085682a8e2cb754bf
+[19:34:47] 🔗✅ LI.FI EXPLORER LINK: null
+[19:34:47] Fee costs:
+[19:34:47] 1. LIFI Fixed Fee: 253 USDC (0.0003 USD)
+[19:34:47] Status check #6...
+[19:34:55] Status: DONE (COMPLETED)
+[19:34:55] Message: The transfer is complete.
+[19:34:55] ✅ Destination transaction: 0x8741ffd62d7f04c992b00fd95d57d196b47b65d6a3f8a3156433218fc3c2c43b
+[19:34:55] 🔗 Found receiving txLink: https://basescan.org/tx/0x8741ffd62d7f04c992b00fd95d57d196b47b65d6a3f8a3156433218fc3c2c43b
+[19:34:55] 🔗✅ LI.FI EXPLORER LINK: null
+[19:34:55] Fee costs:
+[19:34:55] 1. LIFI Fixed Fee: 253 USDC (0.0003 USD)
+[19:34:55] ✅ Bridge execution completed successfully!
+[19:34:55] [6/6] Saving donation record...
+[19:34:55] Final transaction hash: 0xec8af9db42d4abe108b41bbf2816d57d667bd51a8cc433e085682a8e2cb754bf
+[19:34:55] Final lifi explorer link: https://scan.li.fi/tx/0xec8af9db42d4abe108b41bbf2816d57d667bd51a8cc433e085682a8e2cb754bf
+[19:34:55] Calling /api/donations endpoint...
+[19:34:57] Response status: 200 OK
+[19:34:57] ✅ Donation saved successfully!
+[19:34:57] Donation ID: 3f55fd0d-e648-43b5-a167-ec75d912c061
+[19:34:57] 🎉 Deposit process completed successfully!

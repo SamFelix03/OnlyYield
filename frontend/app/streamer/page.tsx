@@ -41,6 +41,18 @@ type Recipient = {
   preferred_chain?: string | null;
 };
 
+type CreatorContent = {
+  id: string;
+  creator_wallet_address: string;
+  file_url: string;
+  file_path: string;
+  file_type: "image" | "video";
+  file_name: string;
+  file_size: number | null;
+  mime_type: string | null;
+  created_at: string;
+};
+
 export default function StreamerPage() {
   const [wallet, setWallet] = useState<`0x${string}` | null>(null);
   const [displayName, setDisplayName] = useState("");
@@ -55,6 +67,9 @@ export default function StreamerPage() {
   const [showProfilePanel, setShowProfilePanel] = useState(false);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [preferredChain, setPreferredChain] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<"dashboard" | "upload">("dashboard");
+  const [uploadedContent, setUploadedContent] = useState<CreatorContent[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
 
   const supabase = useMemo(() => getSupabase(), []);
 
@@ -146,6 +161,90 @@ export default function StreamerPage() {
     );
     console.log("creator-donations response", d);
     setCreatorDonations(d.donations || []);
+
+    // Fetch uploaded content
+    await refreshContent(addr);
+  }
+
+  async function refreshContent(addr: string) {
+    try {
+      const res = await fetch(`/api/creator-content?creator=${addr}`);
+      const data = await res.json();
+      setUploadedContent(data.content || []);
+    } catch (error) {
+      console.error("Failed to fetch content:", error);
+    }
+  }
+
+  async function handleFileUpload(file: File) {
+    if (!wallet) throw new Error("Connect wallet first");
+    if (!file) return;
+
+    setIsUploading(true);
+    setStatus("Uploading content...");
+
+    try {
+      // Step 1: Upload file to storage
+      const uploadFormData = new FormData();
+      uploadFormData.append("file", file);
+      uploadFormData.append("creator_wallet_address", wallet);
+
+      const uploadRes = await fetch("/api/creator-content/upload", {
+        method: "POST",
+        body: uploadFormData,
+      });
+
+      if (!uploadRes.ok) {
+        const errorData = await uploadRes.json();
+        throw new Error(errorData.error || "Upload failed");
+      }
+
+      const uploadData = await uploadRes.json();
+
+      // Step 2: Save metadata to database
+      const saveRes = await fetch("/api/creator-content", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          creator_wallet_address: wallet,
+          ...uploadData,
+        }),
+      });
+
+      if (!saveRes.ok) {
+        const errorData = await saveRes.json();
+        throw new Error(errorData.error || "Failed to save content metadata");
+      }
+
+      setStatus("Content uploaded successfully!");
+      await refreshContent(wallet);
+    } catch (error: any) {
+      setStatus(`Upload failed: ${error.message}`);
+      throw error;
+    } finally {
+      setIsUploading(false);
+    }
+  }
+
+  async function handleDeleteContent(contentId: string) {
+    if (!wallet) return;
+    if (!confirm("Are you sure you want to delete this content?")) return;
+
+    try {
+      const res = await fetch(`/api/creator-content?id=${contentId}&creator=${wallet}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Delete failed");
+      }
+
+      setStatus("Content deleted successfully");
+      await refreshContent(wallet);
+    } catch (error: any) {
+      setStatus(`Delete failed: ${error.message}`);
+    }
   }
 
   useEffect(() => {
@@ -642,22 +741,46 @@ export default function StreamerPage() {
           </section>
         )}
 
-        {/* Yield view when profile exists */}
+        {/* Tabs - only show when profile exists */}
         {hasProfile && (
-          <section className="mt-10 rounded-3xl border border-white/15 bg-gradient-to-br from-slate-700/40 via-slate-900/80 to-black p-5 shadow-xl backdrop-blur-2xl">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-lg font-semibold text-slate-50">
-                  Donations received
-                </h2>
-                <p className="mt-1 text-xs sm:text-sm text-slate-300">
-                  All Donations that have been made to this creator.
-                </p>
-              </div>
-              <div className="rounded-full border border-slate-300/40 bg-black/40 px-3 py-1 text-[11px] font-semibold tracking-wide text-slate-100">
-                {events.length} <span className="uppercase">events</span>
-              </div>
-            </div>
+          <div className="relative z-10 mt-8 inline-flex self-center rounded-full border border-white/10 bg-black/60 p-1 text-sm shadow-lg backdrop-blur-xl">
+            {[
+              { id: "dashboard", label: "Dashboard" },
+              { id: "upload", label: "Upload Content" },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                className={`px-5 py-2 rounded-full transition text-xs sm:text-sm ${
+                  activeTab === tab.id
+                    ? "bg-white text-black shadow-md"
+                    : "text-zinc-200 hover:bg-white/10"
+                }`}
+                onClick={() => setActiveTab(tab.id as typeof activeTab)}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Tab content */}
+        {hasProfile && (
+          <div className="relative z-10 mt-8">
+            {activeTab === "dashboard" && (
+              <section className="rounded-3xl border border-white/15 bg-gradient-to-br from-slate-700/40 via-slate-900/80 to-black p-5 shadow-xl backdrop-blur-2xl">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-lg font-semibold text-slate-50">
+                      Donations received
+                    </h2>
+                    <p className="mt-1 text-xs sm:text-sm text-slate-300">
+                      All Donations that have been made to this creator.
+                    </p>
+                  </div>
+                  <div className="rounded-full border border-slate-300/40 bg-black/40 px-3 py-1 text-[11px] font-semibold tracking-wide text-slate-100">
+                    {events.length} <span className="uppercase">events</span>
+                  </div>
+                </div>
 
             {/* Graph on top, list below */}
             <div className="mt-6 space-y-6">
@@ -761,6 +884,108 @@ export default function StreamerPage() {
               </div>
         </div>
       </section>
+            )}
+
+            {activeTab === "upload" && (
+              <section className="rounded-3xl border border-white/15 bg-gradient-to-br from-slate-700/40 via-slate-900/80 to-black p-5 shadow-xl backdrop-blur-2xl">
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h2 className="text-lg font-semibold text-slate-50">
+                      Upload Content
+                    </h2>
+                    <p className="mt-1 text-xs sm:text-sm text-slate-300">
+                      Upload images or videos to showcase your work.
+                    </p>
+                  </div>
+                  <div className="rounded-full border border-slate-300/40 bg-black/40 px-3 py-1 text-[11px] font-semibold tracking-wide text-slate-100">
+                    {uploadedContent.length} <span className="uppercase">items</span>
+                  </div>
+                </div>
+
+                {/* Upload area */}
+                <div className="mb-8">
+                  <label
+                    htmlFor="content-upload"
+                    className="flex cursor-pointer flex-col items-center justify-center rounded-3xl border-2 border-dashed border-white/20 bg-black/40 p-12 transition hover:border-white/40 hover:bg-black/60"
+                  >
+                    <input
+                      id="content-upload"
+                      type="file"
+                      accept="image/*,video/*"
+                      className="hidden"
+                      disabled={isUploading}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          handleFileUpload(file).catch((error) => {
+                            console.error("Upload error:", error);
+                          });
+                        }
+                      }}
+                    />
+                    <div className="text-center">
+                      <div className="mb-4 text-4xl">📤</div>
+                      <div className="text-sm font-semibold text-slate-50">
+                        {isUploading ? "Uploading..." : "Click to upload content"}
+                      </div>
+                      <div className="mt-2 text-xs text-slate-400">
+                        Images or videos (max 50MB)
+                      </div>
+                    </div>
+                  </label>
+                </div>
+
+                {/* Uploaded content grid */}
+                {uploadedContent.length > 0 ? (
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {uploadedContent.map((item) => (
+                      <div
+                        key={item.id}
+                        className="group relative overflow-hidden rounded-2xl border border-white/10 bg-black/60"
+                      >
+                        {item.file_type === "image" ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={item.file_url}
+                            alt={item.file_name}
+                            className="h-48 w-full object-cover"
+                          />
+                        ) : (
+                          <video
+                            src={item.file_url}
+                            className="h-48 w-full object-cover"
+                            controls
+                          />
+                        )}
+                        <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity group-hover:opacity-100">
+                          <div className="flex h-full items-center justify-center gap-2">
+                            <button
+                              onClick={() => handleDeleteContent(item.id)}
+                              className="rounded-full bg-red-500/80 px-4 py-2 text-xs font-semibold text-white hover:bg-red-500"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                        <div className="p-3">
+                          <div className="truncate text-xs font-medium text-slate-200">
+                            {item.file_name}
+                          </div>
+                          <div className="mt-1 text-[10px] text-slate-400">
+                            {new Date(item.created_at).toLocaleDateString()}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="rounded-2xl border border-dashed border-white/20 bg-black/40 px-6 py-12 text-center text-sm text-slate-400">
+                    No content uploaded yet. Click above to upload your first image or video.
+                  </div>
+                )}
+              </section>
+            )}
+          </div>
         )}
           </>
         )}

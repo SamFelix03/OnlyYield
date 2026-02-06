@@ -72,8 +72,12 @@ export default function DonorPage() {
   const [donations, setDonations] = useState<any[]>([]);
   const [yieldEvents, setYieldEvents] = useState<any[]>([]);
   const [isWithdrawing, setIsWithdrawing] = useState<Record<string, boolean>>({});
-  const [activeTab, setActiveTab] = useState<"deposit" | "withdraw" | "donations">("deposit");
+  const [activeTab, setActiveTab] = useState<"deposit" | "withdraw" | "donations" | "feed">("deposit");
   const [depositView, setDepositView] = useState<"table" | "form">("table");
+  
+  // Feed state
+  const [feedContent, setFeedContent] = useState<any[]>([]);
+  const [selectedContent, setSelectedContent] = useState<any | null>(null);
   
   // Chain selection state
   const [selectedSourceChain, setSelectedSourceChain] = useState<string | null>(null);
@@ -212,6 +216,20 @@ export default function DonorPage() {
     ]);
     setDonations(d.donations || []);
     setYieldEvents(y.yield_distributions || []);
+    
+    // Refresh feed content
+    await refreshFeed(addr);
+  }
+
+  async function refreshFeed(addr: string) {
+    try {
+      const res = await fetch(`/api/donor-feed?donor=${addr}`);
+      const data = await res.json();
+      setFeedContent(data.content || []);
+    } catch (error) {
+      console.error("Failed to fetch feed:", error);
+      setFeedContent([]);
+    }
   }
 
   useEffect(() => {
@@ -417,13 +435,18 @@ export default function DonorPage() {
 
           if (txHash) {
             addLog(`   Waiting for approval confirmation...`);
-            await client.waitForTransactionReceipt({
+            const approvalReceipt = await client.waitForTransactionReceipt({
               hash: txHash,
               retryCount: 20,
               retryDelay: ({ count }: { count: number; error: Error }) =>
                 Math.min(~~(1 << count) * 200, 3000),
             });
-            addLog(`   ✅ Approval confirmed`);
+            addLog(`   ✅ Approval confirmed in block ${approvalReceipt.blockNumber}`);
+            
+            // Add delay after approval to ensure state propagation
+            addLog(`   Waiting for state propagation (3 seconds)...`);
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            addLog(`   ✅ State propagation complete`);
           }
         } else {
           addLog(`   ✅ Sufficient allowance`);
@@ -536,6 +559,7 @@ export default function DonorPage() {
       // Store only the hash in the database
       const depositTxHash = extractHash(lifiExplorerUrl || finalTxHash);
       addLog(`   Final transaction hash: ${depositTxHash}`);
+      addLog(`   Final lifi explorer link: ${`https://scan.li.fi/tx/${depositTxHash}`}`);
       if (lifiExplorerLink) {
         addLog(`   🔗 LI.FI Explorer: ${lifiExplorerLink}`);
       }
@@ -626,19 +650,19 @@ export default function DonorPage() {
           
           // Request approval from donor
           addWithdrawLog(`\n[2a/5] Requesting approval from donor...`);
-          const wc = await getConnectedWalletClient();
+      const wc = await getConnectedWalletClient();
           
           // Approve max uint256 to avoid needing approval again
           const MAX_UINT256 = BigInt('115792089237316195423570985008687907853269984665640564039457584007913129639935'); // 2^256 - 1
           const approvalHash = await wc.writeContract({
             address: quoteData.strategy_address,
-            abi: YIELD_STRATEGY_ABI,
+        abi: YIELD_STRATEGY_ABI,
             functionName: 'approve',
-            args: [
+        args: [
               quoteData.orchestrator_address,
               MAX_UINT256,
-            ],
-          });
+        ],
+      });
           
           addWithdrawTxHash("Approval", approvalHash, `https://basescan.org/tx/${approvalHash}`);
           addWithdrawLog(`   Waiting for approval confirmation...`);
@@ -651,6 +675,11 @@ export default function DonorPage() {
           ]) as any;
           
           addWithdrawLog(`   ✅ Approval confirmed in block ${approvalReceipt.blockNumber}`);
+          
+          // Add delay after approval to ensure state propagation
+          addWithdrawLog(`   Waiting for state propagation (3 seconds)...`);
+          await new Promise(resolve => setTimeout(resolve, 3000));
+          addWithdrawLog(`   ✅ State propagation complete`);
           
           // Retry withdrawal after approval
           addWithdrawLog(`\n[2b/5] Retrying withdrawal after approval...`);
@@ -684,6 +713,7 @@ export default function DonorPage() {
       }
 
       let finalTxHash: `0x${string}` = quoteData.withdraw_tx_hash || '0x';
+      let bridgeTxHash = ''; // Declare here so it's accessible in updateRouteHook
 
       if (quoteData.same_chain) {
         // Same chain withdrawal - already completed by operator
@@ -751,43 +781,119 @@ export default function DonorPage() {
 
         // Execute bridge
         addWithdrawLog(`   Executing bridge transaction...`);
+        addWithdrawLog(`   Waiting for wallet approval...`, false);
         
-        let bridgeTxHash = '';
         let bridgeStatus: any;
+        let lastStatusUpdate = Date.now();
+        let statusUpdateCount = 0;
+        
         const executionOptions = {
           updateRouteHook: (updatedRoute: any) => {
             bridgeStatus = updatedRoute;
+            statusUpdateCount++;
+            lastStatusUpdate = Date.now();
+            
+            // Log detailed status updates
             if (updatedRoute.steps && updatedRoute.steps.length > 0) {
-              const firstStep = updatedRoute.steps[0];
-              if (firstStep.transactionHash && !bridgeTxHash) {
-                bridgeTxHash = firstStep.transactionHash;
-                addWithdrawTxHash("Bridge", bridgeTxHash, firstStep.txLink);
-                addWithdrawLog(`   ✅ Bridge transaction sent: ${bridgeTxHash}`, false);
-              }
+              updatedRoute.steps.forEach((step: any, index: number) => {
+                const stepStatus = step.execution?.status || step.status || 'PENDING';
+                const stepType = step.type || 'UNKNOWN';
+                
+                if (step.transactionHash && !bridgeTxHash) {
+                  bridgeTxHash = step.transactionHash;
+                  addWithdrawTxHash("Bridge", bridgeTxHash, step.txLink || `https://basescan.org/tx/${bridgeTxHash}`);
+                  addWithdrawLog(`   ✅ Bridge transaction sent: ${bridgeTxHash}`, false);
+                  addWithdrawLog(`   🔗 Explorer: ${step.txLink || `https://basescan.org/tx/${bridgeTxHash}`}`, false);
+                }
+                
+                // Log step progress
+                if (stepStatus !== 'PENDING') {
+                  addWithdrawLog(`   Step ${index + 1}/${updatedRoute.steps.length} (${stepType}): ${stepStatus}${step.execution?.substatus ? ` - ${step.execution.substatus}` : ''}`, false);
+                }
+                
+                // Log process details
+                if (step.execution?.process) {
+                  step.execution.process.forEach((process: any, pIndex: number) => {
+                    if (process.status && process.status !== 'PENDING') {
+                      addWithdrawLog(`     Process ${pIndex + 1}: ${process.status}${process.txHash ? ` (${process.txHash.slice(0, 10)}...)` : ''}`, false);
+                    }
+                  });
+                }
+              });
             }
+            
+            // Log overall route status
             if (updatedRoute.status) {
-              addWithdrawLog(`   Bridge status: ${updatedRoute.status}${updatedRoute.substatus ? ` (${updatedRoute.substatus})` : ''}`, false);
+              const statusMsg = `   Route status: ${updatedRoute.status}${updatedRoute.substatus ? ` (${updatedRoute.substatus})` : ''}`;
+              addWithdrawLog(statusMsg, false);
+              
+              // Log receiving transaction if available
+              if (updatedRoute.receiving?.txHash) {
+                finalTxHash = updatedRoute.receiving.txHash;
+                addWithdrawTxHash("Bridge Receiving", finalTxHash, updatedRoute.receiving.txLink);
+                addWithdrawLog(`   ✅ Receiving transaction: ${finalTxHash}`, false);
+              }
+              
+              // Log explorer link
+              if (updatedRoute.lifiExplorerLink) {
+                setWithdrawLifiExplorerLink(updatedRoute.lifiExplorerLink);
+                addWithdrawLog(`   🔗 LI.FI Explorer: ${updatedRoute.lifiExplorerLink}`, false);
+              }
             }
           },
         };
 
-        await executeRoute(route, executionOptions);
+        // Add timeout wrapper for executeRoute
+        const bridgeTimeout = 5 * 60 * 1000; // 5 minutes
+        const bridgeStartTime = Date.now();
+        
+        // Start a status monitor that logs periodically
+        const statusMonitor = setInterval(() => {
+          const elapsed = Math.floor((Date.now() - bridgeStartTime) / 1000);
+          const timeSinceUpdate = Date.now() - lastStatusUpdate;
+          
+          if (timeSinceUpdate > 30000) { // 30 seconds without update
+            addWithdrawLog(`   ⏳ Still waiting... (${elapsed}s elapsed, ${statusUpdateCount} status updates)`, false);
+          }
+        }, 10000); // Check every 10 seconds
+
+        try {
+          await Promise.race([
+            executeRoute(route, executionOptions),
+            new Promise((_, reject) => 
+              setTimeout(() => reject(new Error('Bridge execution timeout after 5 minutes')), bridgeTimeout)
+            )
+          ]);
+        } finally {
+          clearInterval(statusMonitor);
+        }
+        
+        // Final status check
+        if (!bridgeStatus) {
+          throw new Error('Bridge execution completed but no status was received');
+        }
         
         if (bridgeStatus?.status === 'FAILED') {
           throw new Error(`Bridge execution failed: ${bridgeStatus.substatus || 'Unknown error'}`);
         }
 
-        if (bridgeStatus?.receiving?.txHash) {
-          finalTxHash = bridgeStatus.receiving.txHash;
-          addWithdrawTxHash("Bridge Receiving", finalTxHash, bridgeStatus.receiving.txLink);
-        }
+        if (bridgeStatus?.status === 'DONE') {
+          addWithdrawLog(`   ✅ Bridge execution completed successfully!`);
+          
+          if (bridgeStatus?.receiving?.txHash) {
+            finalTxHash = bridgeStatus.receiving.txHash;
+            addWithdrawTxHash("Bridge Receiving", finalTxHash, bridgeStatus.receiving.txLink);
+            addWithdrawLog(`   ✅ Receiving transaction: ${finalTxHash}`, false);
+          }
 
-        if (bridgeStatus?.lifiExplorerLink) {
-          setWithdrawLifiExplorerLink(bridgeStatus.lifiExplorerLink);
-          addWithdrawLog(`   🔗✅ LI.FI EXPLORER: ${bridgeStatus.lifiExplorerLink}`, false);
+          if (bridgeStatus?.lifiExplorerLink) {
+            setWithdrawLifiExplorerLink(bridgeStatus.lifiExplorerLink);
+            addWithdrawLog(`   🔗✅ LI.FI EXPLORER: ${bridgeStatus.lifiExplorerLink}`, false);
+          }
+        } else {
+          addWithdrawLog(`   ⚠️ Bridge status: ${bridgeStatus?.status || 'UNKNOWN'}`, false);
+          addWithdrawLog(`   Bridge may still be processing. Check LI.FI explorer for updates.`, false);
         }
-
-        addWithdrawLog(`   ✅ Bridge execution completed successfully!`);
       }
 
       // Step 4: Mark donation as withdrawn in database (ONLY after full success)
@@ -1072,6 +1178,7 @@ export default function DonorPage() {
           { id: "deposit", label: "Deposit" },
           { id: "withdraw", label: "Withdraw" },
           { id: "donations", label: "Donations" },
+          { id: "feed", label: "Feed" },
         ].map((tab) => (
           <button
             key={tab.id}
@@ -1565,7 +1672,166 @@ export default function DonorPage() {
             </section>
           </div>
         )}
+
+        {activeTab === "feed" && (
+          <section className="rounded-3xl border border-white/15 bg-gradient-to-br from-slate-700/40 via-slate-900/80 to-black p-5 shadow-xl backdrop-blur-2xl">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-lg font-semibold text-slate-50">
+                  Exclusive Content Feed
+                </h2>
+                <p className="mt-1 text-xs sm:text-sm text-slate-300">
+                  Content from creators you've supported
+                </p>
         </div>
+              <div className="rounded-full border border-slate-300/40 bg-black/40 px-3 py-1 text-[11px] font-semibold tracking-wide text-slate-100">
+                {feedContent.length} <span className="uppercase">items</span>
+              </div>
+            </div>
+
+            {feedContent.length > 0 ? (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {feedContent.map((item) => (
+                  <div
+                    key={item.id}
+                    className="group relative cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-black/60 transition hover:border-white/30"
+                    onClick={() => setSelectedContent(item)}
+                  >
+                    {item.file_type === "image" ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={item.file_url}
+                        alt={item.file_name}
+                        className="h-64 w-full object-cover"
+                      />
+                    ) : (
+                      <video
+                        src={item.file_url}
+                        className="h-64 w-full object-cover"
+                        muted
+                      />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100">
+                      <div className="absolute bottom-0 left-0 right-0 p-4">
+                        {item.creator && (
+                          <div className="flex items-center gap-2">
+                            {item.creator.profile_pic_url ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img
+                                src={item.creator.profile_pic_url}
+                                alt={item.creator.display_name || "Creator"}
+                                className="h-6 w-6 rounded-full object-cover"
+                              />
+                            ) : (
+                              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20 text-xs font-semibold">
+                                {(item.creator.display_name || "C").slice(0, 1).toUpperCase()}
+                              </div>
+                            )}
+                            <div className="text-xs font-medium text-white">
+                              {item.creator.display_name || `${item.creator.wallet_address.slice(0, 6)}...${item.creator.wallet_address.slice(-4)}`}
+                            </div>
+                          </div>
+                        )}
+                        <div className="mt-1 truncate text-[10px] text-slate-300">
+                          {item.file_name}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="p-3">
+                      <div className="truncate text-xs font-medium text-slate-200">
+                        {item.file_name}
+                      </div>
+                      <div className="mt-1 text-[10px] text-slate-400">
+                        {new Date(item.created_at).toLocaleDateString()}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-dashed border-white/20 bg-black/40 px-6 py-12 text-center text-sm text-slate-400">
+                No content available yet. Support creators to see their exclusive content here.
+              </div>
+            )}
+          </section>
+        )}
+        </div>
+
+        {/* Full-screen content modal */}
+        {selectedContent && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4"
+            onClick={() => setSelectedContent(null)}
+          >
+            <button
+              className="absolute top-4 right-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedContent(null);
+              }}
+            >
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+            <div
+              className="relative max-h-[90vh] max-w-[90vw]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {selectedContent.file_type === "image" ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={selectedContent.file_url}
+                  alt={selectedContent.file_name}
+                  className="max-h-[90vh] max-w-[90vw] rounded-lg object-contain"
+                />
+              ) : (
+                <video
+                  src={selectedContent.file_url}
+                  className="max-h-[90vh] max-w-[90vw] rounded-lg"
+                  controls
+                  autoPlay
+                />
+              )}
+              {selectedContent.creator && (
+                <div className="absolute bottom-0 left-0 right-0 rounded-b-lg bg-gradient-to-t from-black/90 to-transparent p-4">
+                  <div className="flex items-center gap-3">
+                    {selectedContent.creator.profile_pic_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={selectedContent.creator.profile_pic_url}
+                        alt={selectedContent.creator.display_name || "Creator"}
+                        className="h-10 w-10 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-sm font-semibold">
+                        {(selectedContent.creator.display_name || "C").slice(0, 1).toUpperCase()}
+                      </div>
+                    )}
+                    <div>
+                      <div className="font-semibold text-white">
+                        {selectedContent.creator.display_name || `${selectedContent.creator.wallet_address.slice(0, 6)}...${selectedContent.creator.wallet_address.slice(-4)}`}
+                      </div>
+                      <div className="text-xs text-slate-300">
+                        {selectedContent.file_name} • {new Date(selectedContent.created_at).toLocaleDateString()}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );

@@ -173,12 +173,12 @@ export default function ManageFundsPage() {
           </div>
         </div>
 
-        {/* Action panel */}
+        {/* AI Agent Panel */}
         <section className="relative z-10 mt-8 rounded-3xl border border-white/15 bg-gradient-to-br from-slate-700/40 via-slate-900/80 to-black p-5 shadow-xl backdrop-blur-2xl">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-slate-300" />
-              <span className="text-[11px] font-semibold tracking-[0.22em] text-slate-200 uppercase">Controls</span>
+              <span className="text-[11px] font-semibold tracking-[0.22em] text-slate-200 uppercase">AI Yield Agent</span>
             </div>
             {status ? (
               <div className="rounded-full border border-slate-300/40 bg-black/40 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-slate-100">
@@ -187,15 +187,40 @@ export default function ManageFundsPage() {
             ) : null}
           </div>
 
-          <div className="mt-4 grid gap-3 md:grid-cols-3">
-            <button
-              className="inline-flex items-center justify-center rounded-full bg-white/90 px-6 py-3 text-sm font-semibold tracking-wide text-black shadow-lg shadow-slate-300/40 transition hover:scale-[1.02] hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
-              disabled={busy.agent}
-              onClick={triggerAgent}
-              type="button"
-            >
-              {busy.agent ? "Triggering..." : "Agent trigger"}
-            </button>
+          <div className="mt-4">
+            <p className="mb-4 text-sm text-slate-300 leading-relaxed">
+              The AI agent monitors APY across multiple stablecoins (USDC, USDT, DAI, USDC.e) and automatically optimizes allocation. 
+              It uses LI.FI to swap tokens at optimal rates across multiple DEXs, then rebalances deposits to maximize yield. 
+              Better yield means more support for creators.
+            </p>
+            <div className="flex justify-center">
+              <button
+                className="inline-flex items-center justify-center rounded-full bg-white/90 px-6 py-3 text-sm font-semibold tracking-wide text-black shadow-lg shadow-slate-300/40 transition hover:scale-[1.02] hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
+                disabled={busy.agent}
+                onClick={triggerAgent}
+                type="button"
+              >
+                {busy.agent ? "Triggering..." : "Trigger AI Agent"}
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* Vault Controls Panel */}
+        <section className="relative z-10 mt-6 rounded-3xl border border-white/15 bg-gradient-to-br from-slate-700/40 via-slate-900/80 to-black p-5 shadow-xl backdrop-blur-2xl">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-slate-300" />
+              <span className="text-[11px] font-semibold tracking-[0.22em] text-slate-200 uppercase">Vault Controls</span>
+            </div>
+            {status ? (
+              <div className="rounded-full border border-slate-300/40 bg-black/40 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-slate-100">
+                Base {status.chain_id}
+              </div>
+            ) : null}
+          </div>
+
+          <div className="mt-4 grid gap-3 md:grid-cols-2">
             <button
               className="inline-flex items-center justify-center rounded-full bg-white/90 px-6 py-3 text-sm font-semibold tracking-wide text-black shadow-lg shadow-slate-300/40 transition hover:scale-[1.02] hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
               disabled={busy.supply}

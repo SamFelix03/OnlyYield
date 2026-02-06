@@ -525,7 +525,7 @@ IMPORTANT GUIDELINES:
 - Be honest about uncertainties and risks
 - Provide actionable insights, not just data regurgitation
 
-Remember: You're managing real treasury funds (testnet for now, but treat it as real). Your recommendations should be professional, well-reasoned, and defensible."""
+Remember: You're managing real treasury funds. Your recommendations should be professional, well-reasoned, and defensible."""
 
     def ask_llm_for_decision(self, market_data: Dict) -> Dict:
         """Use GPT-4 to analyze market data and make a decision."""

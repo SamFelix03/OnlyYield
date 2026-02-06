@@ -133,32 +133,149 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No shares to withdraw" }, { status: 400 });
     }
 
-    // Convert shares to assets manually (assets = shares * totalAssets / totalSupply)
+    // Helper function to retry RPC calls with exponential backoff
+    const retryRpcCall = async <T>(
+      fn: () => Promise<T>,
+      maxRetries = 3,
+      baseDelay = 1000
+    ): Promise<T> => {
+      for (let i = 0; i < maxRetries; i++) {
+        try {
+          return await fn();
+        } catch (error: any) {
+          const isRateLimit = error?.cause?.cause?.details?.includes('rate limit') || 
+                             error?.cause?.details?.includes('rate limit') ||
+                             error?.message?.includes('rate limit') ||
+                             error?.status === 429;
+          
+          if (isRateLimit && i < maxRetries - 1) {
+            const delay = baseDelay * Math.pow(2, i);
+            console.warn(`Rate limit hit, retrying in ${delay}ms... (attempt ${i + 1}/${maxRetries})`);
+            await new Promise(resolve => setTimeout(resolve, delay));
+            continue;
+          }
+          throw error;
+        }
+      }
+      throw new Error('Max retries exceeded');
+    };
+
+    // Get current strategy state to calculate max withdrawable
+    // Add small delay between calls to avoid rate limiting
+    const totalAssets = await retryRpcCall(() =>
+      baseMainnetPublicClient.readContract({
+        address: strategyAddress,
+        abi: YIELD_STRATEGY_READ_ABI,
+        functionName: 'totalAssets',
+      })
+    ) as bigint;
+    
+    await new Promise(resolve => setTimeout(resolve, 200)); // Small delay between calls
+    
+    const totalSupply = await retryRpcCall(() =>
+      baseMainnetPublicClient.readContract({
+        address: strategyAddress,
+        abi: YIELD_STRATEGY_READ_ABI,
+        functionName: 'totalSupply',
+      })
+    ) as bigint;
+    
+    // Calculate maximum withdrawable assets (rough estimate)
+    const estimatedMaxAssets = totalSupply > BigInt(0) 
+      ? (donorShares * totalAssets) / totalSupply 
+      : donorShares;
+    
+    // Determine withdrawal amount
     let withdrawAmountAssets: bigint;
     if (body.amount_in_base_units) {
-      withdrawAmountAssets = BigInt(body.amount_in_base_units);
+      const requestedAmount = BigInt(body.amount_in_base_units);
+      withdrawAmountAssets = requestedAmount;
     } else {
-      const [totalAssets, totalSupply] = await Promise.all([
-        baseMainnetPublicClient.readContract({
-          address: strategyAddress,
-          abi: YIELD_STRATEGY_READ_ABI,
-          functionName: 'totalAssets',
-        }),
-        baseMainnetPublicClient.readContract({
-          address: strategyAddress,
-          abi: YIELD_STRATEGY_READ_ABI,
-          functionName: 'totalSupply',
-        }),
-      ]) as [bigint, bigint];
-      if (totalSupply === BigInt(0)) {
-        withdrawAmountAssets = donorShares; // 1:1 if no supply
-      } else {
-        withdrawAmountAssets = (donorShares * totalAssets) / totalSupply;
+      // No amount specified, use estimated max
+      withdrawAmountAssets = estimatedMaxAssets;
+    }
+    
+    // Add delay before next call
+    await new Promise(resolve => setTimeout(resolve, 200));
+    
+    // Use previewWithdraw to get exact shares needed - this is what the contract will use
+    // This ensures we're using the contract's exact calculation logic
+    const requiredShares = await retryRpcCall(() =>
+      baseMainnetPublicClient.readContract({
+        address: strategyAddress,
+        abi: YIELD_STRATEGY_READ_ABI,
+        functionName: 'previewWithdraw',
+        args: [withdrawAmountAssets],
+      })
+    ) as bigint;
+    
+    // Check if we have enough shares
+    if (requiredShares > donorShares) {
+      // Calculate the actual maximum we can withdraw by finding assets where previewWithdraw <= donorShares
+      // Use binary search approach: start with estimated max and reduce until it fits
+      let low = BigInt(0);
+      let high = estimatedMaxAssets;
+      let bestAmount = BigInt(0);
+      
+      // Binary search for maximum withdrawable amount
+      for (let i = 0; i < 20; i++) {
+        const mid = (low + high) / BigInt(2);
+        if (mid === BigInt(0)) break;
+        
+        try {
+          // Add delay between binary search iterations to avoid rate limiting
+          await new Promise(resolve => setTimeout(resolve, 300));
+          
+          const testShares = await retryRpcCall(() =>
+            baseMainnetPublicClient.readContract({
+              address: strategyAddress,
+              abi: YIELD_STRATEGY_READ_ABI,
+              functionName: 'previewWithdraw',
+              args: [mid],
+            })
+          ) as bigint;
+          
+          if (testShares <= donorShares) {
+            bestAmount = mid;
+            low = mid + BigInt(1);
+          } else {
+            high = mid - BigInt(1);
+          }
+        } catch (e) {
+          // If previewWithdraw fails, reduce high
+          high = mid - BigInt(1);
+        }
       }
+      
+      if (bestAmount === BigInt(0)) {
+        return NextResponse.json({ 
+          error: `Cannot withdraw ${formatUnits(withdrawAmountAssets, 6)} USDC. Maximum available: ${formatUnits(estimatedMaxAssets, 6)} USDC (estimated). Please try withdrawing a smaller amount.`,
+          max_available_estimate: estimatedMaxAssets.toString(),
+        }, { status: 400 });
+      }
+      
+      // If user specified an amount that's too high, use the calculated max
+      if (body.amount_in_base_units) {
+        console.info(`>> Requested amount (${formatUnits(withdrawAmountAssets, 6)} USDC) requires more shares than available. Using maximum withdrawable: ${formatUnits(bestAmount, 6)} USDC`);
+        withdrawAmountAssets = bestAmount;
+      } else {
+        withdrawAmountAssets = bestAmount;
+      }
+    }
+    
+    // Final check - ensure we have something to withdraw
+    if (withdrawAmountAssets === BigInt(0)) {
+      return NextResponse.json({ 
+        error: "No assets available to withdraw" 
+      }, { status: 400 });
     }
 
     console.info(`>> Creating withdrawal: ${formatUnits(withdrawAmountAssets, 6)} USDC`);
     console.info(`>> Donor: ${donorAddress}`);
+    console.info(`>> Donor shares: ${donorShares.toString()}`);
+    console.info(`>> Strategy total assets: ${formatUnits(totalAssets, 6)} USDC`);
+    console.info(`>> Strategy total supply: ${totalSupply.toString()} shares`);
+    console.info(`>> Estimated max withdrawable: ${formatUnits(estimatedMaxAssets, 6)} USDC`);
     console.info(`>> Target chain: ${targetChainConfig.name} (${originalChainId})`);
 
     // Load orchestrator address and operator private key
@@ -170,31 +287,41 @@ export async function POST(req: Request) {
     // The orchestrator needs approval to call strategy.withdraw() on behalf of the donor
     console.info(`>> Checking allowance for orchestrator...`);
     
-    // Calculate required shares for the withdrawal amount
-    const requiredShares = await baseMainnetPublicClient.readContract({
-      address: strategyAddress,
-      abi: YIELD_STRATEGY_READ_ABI,
-      functionName: 'previewWithdraw',
-      args: [withdrawAmountAssets],
-    }) as bigint;
+    // Add delay before next call
+    await new Promise(resolve => setTimeout(resolve, 200));
     
-    const allowance = await baseMainnetPublicClient.readContract({
-      address: strategyAddress,
-      abi: YIELD_STRATEGY_READ_ABI,
-      functionName: 'allowance',
-      args: [donorAddress, orchestratorAddress],
-    }) as bigint;
+    // Calculate required shares for the withdrawal amount (using previewWithdraw for accuracy)
+    const requiredSharesForWithdrawal = await retryRpcCall(() =>
+      baseMainnetPublicClient.readContract({
+        address: strategyAddress,
+        abi: YIELD_STRATEGY_READ_ABI,
+        functionName: 'previewWithdraw',
+        args: [withdrawAmountAssets],
+      })
+    ) as bigint;
+    
+    // Add delay before next call
+    await new Promise(resolve => setTimeout(resolve, 200));
+    
+    const allowance = await retryRpcCall(() =>
+      baseMainnetPublicClient.readContract({
+        address: strategyAddress,
+        abi: YIELD_STRATEGY_READ_ABI,
+        functionName: 'allowance',
+        args: [donorAddress, orchestratorAddress],
+      })
+    ) as bigint;
 
-    console.info(`>> Required shares: ${requiredShares.toString()}, Current allowance: ${allowance.toString()}`);
+    console.info(`>> Required shares: ${requiredSharesForWithdrawal.toString()}, Current allowance: ${allowance.toString()}`);
 
-    if (allowance < requiredShares) {
+    if (allowance < requiredSharesForWithdrawal) {
       return NextResponse.json({
         error: "Insufficient approval",
-        message: `Donor must approve orchestrator to spend strategy shares. Current allowance: ${formatUnits(allowance, 18)}, Required: ${formatUnits(requiredShares, 18)}`,
+        message: `Donor must approve orchestrator to spend strategy shares. Current allowance: ${formatUnits(allowance, 18)}, Required: ${formatUnits(requiredSharesForWithdrawal, 18)}`,
         needs_approval: true,
         strategy_address: strategyAddress,
         orchestrator_address: orchestratorAddress,
-        required_shares: requiredShares.toString(),
+        required_shares: requiredSharesForWithdrawal.toString(),
         current_allowance: allowance.toString(),
       }, { status: 400 });
     }
@@ -269,28 +396,34 @@ export async function POST(req: Request) {
     let errorMessage = error?.shortMessage || error?.message || String(error);
     
     if (error?.data || error?.raw) {
+      const errorData = (error.data || error.raw) as `0x${string}`;
       try {
-        // Try decoding with orchestrator ABI first
+        // Try decoding with strategy ABI first (most errors come from strategy/vault)
         const decoded = decodeErrorResult({
-          abi: YIELD_ORCHESTRATOR_ABI,
-          data: (error.data || error.raw) as `0x${string}`,
+          abi: YIELD_STRATEGY_ABI,
+          data: errorData,
         });
         errorMessage = `${decoded.errorName}: ${JSON.stringify(decoded.args)}`;
+        console.error('Decoded error (strategy ABI):', decoded);
       } catch {
         try {
-          // If that fails, try with strategy ABI (error might come from strategy contract)
+          // Try decoding with orchestrator ABI
           const decoded = decodeErrorResult({
-            abi: YIELD_STRATEGY_ABI,
-            data: (error.data || error.raw) as `0x${string}`,
+            abi: YIELD_ORCHESTRATOR_ABI,
+            data: errorData,
           });
           errorMessage = `${decoded.errorName}: ${JSON.stringify(decoded.args)}`;
+          console.error('Decoded error (orchestrator ABI):', decoded);
         } catch {
-          // If both fail, use the original error
+          // If both fail, log the raw error data for debugging
+          console.error('Could not decode error. Raw error data:', errorData);
+          console.error('Error signature:', errorData.slice(0, 10));
         }
       }
     }
     
     console.error('Orchestrate withdraw API error:', error);
+    console.error('Full error object:', JSON.stringify(error, null, 2));
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

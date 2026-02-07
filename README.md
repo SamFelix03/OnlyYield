@@ -1,8 +1,9 @@
 # OnlyYield - Support Creators with Yield, Keep Your Money
 
 <p align="center">
-<img width="763" height="327" alt="onlyYieldLogo" src="https://github.com/user-attachments/assets/6efd77d8-f937-4b92-a0b4-60605f05e269" />
+<img width="977" height="625" alt="Screenshot 2026-02-07 at 12 07 30 AM" src="https://github.com/user-attachments/assets/f87ab237-4969-4f61-a9ad-95a5f2636a0a" />
 </p>
+
 
 
 **OnlyYield** is like Patreon, but with a key difference: you keep your principal. Traditional creator support platforms work great - they enable direct support and exclusive content access. OnlyYield offers the same benefits while allowing you to support creators with **yield** - the passive income your money earns - instead of spending your principal. You keep your money, creators get supported, and you unlock exclusive content.

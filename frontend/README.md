@@ -1,24 +1,24 @@
-# OnlyYield - Support Creators with Yield, Not Your Money
+# OnlyYield - Support Creators with Yield, Keep Your Money
 
-**OnlyYield** is like Patreon, but instead of paying creators with your hard-earned money, you support them with **yield** - the passive income your money earns. You keep your principal, creators get supported, and you unlock exclusive content. It's a win-win-win.
+**OnlyYield** is like Patreon, but with a key difference: you keep your principal. Traditional creator support platforms work great - they enable direct support and exclusive content access. OnlyYield offers the same benefits while allowing you to support creators with **yield** - the passive income your money earns - instead of spending your principal. You keep your money, creators get supported, and you unlock exclusive content.
 
-## The Problem: Supporting Creators Costs You Money
+## The Opportunity: Support Creators While Keeping Your Money
 
-Imagine you want to support your favorite creator on Patreon:
+Traditional creator support platforms like Patreon are excellent - they enable creators to monetize their work and supporters to access exclusive content. However, when you support creators through traditional platforms, your money is spent and cannot be recovered.
 
 **Traditional Patreon Flow:**
 1. You pay $10/month to unlock exclusive content
-2. Your $10 is **gone forever** - you'll never see it again
-3. You get access to content... until you stop paying
-4. After 12 months, you've spent $120 and have **nothing** to show for it
+2. Your $10 supports the creator directly
+3. You get access to content while you're subscribed
+4. After 12 months, you've spent $120 supporting creators
 
-**The Reality:**
-- Supporting creators means **losing your money**
-- You have to choose between supporting creators and saving/investing
-- Many people can't afford to support creators they love
-- Even if you can afford it, it feels like "burning money"
+**The OnlyYield Difference:**
+- Traditional support: Your money supports creators (which is great!)
+- OnlyYield: Your money supports creators AND stays yours
+- You can support creators while preserving your principal
+- Your money earns yield that supports creators, but you keep the original amount
 
-## ✨ The OnlyYield Solution: Support Creators with Yield, Keep Your Principal
+## The OnlyYield Solution: Support Creators with Yield, Keep Your Principal
 
 **OnlyYield Flow:**
 1. You deposit $500 USDC (or any amount) - **this is YOUR money, you keep it**
@@ -29,12 +29,12 @@ Imagine you want to support your favorite creator on Patreon:
 6. **Your $500 principal stays yours** - you can withdraw it anytime
 
 **The Magic:**
-- ✅ Support creators **without spending your money**
-- ✅ Get exclusive content access (like Patreon)
-- ✅ Keep your principal - withdraw anytime
-- ✅ Your money keeps earning yield while supporting creators
-- ✅ Cross-chain support - deposit from any chain, creators receive on their preferred chain
-- ✅ **Promotes healthy investment habits** - Instead of spending on subscriptions, you invest and use the returns
+- Support creators **without spending your money**
+- Get exclusive content access (like Patreon)
+- Keep your principal - withdraw anytime
+- Your money keeps earning yield while supporting creators
+- Cross-chain support - deposit from any chain, creators receive on their preferred chain
+- **Promotes healthy investment habits** - Instead of spending on subscriptions, you invest and use the returns
 
 ### Real-World Example: Sarah's Story
 
@@ -46,7 +46,8 @@ Imagine you want to support your favorite creator on Patreon:
 **Traditional Patreon:**
 - Monthly cost: $30
 - Annual cost: $360
-- After 1 year: $360 **gone**, $0 left
+- Supports creators directly
+- After 1 year: $360 spent supporting creators
 - If she stops paying: No more content access
 
 **With OnlyYield:**
@@ -58,8 +59,8 @@ Imagine you want to support your favorite creator on Patreon:
 - After 1 year: Still has $2,000 + supported creators + exclusive content
 
 **The Difference:**
-- Traditional: Spend $360, get content, money is gone
-- OnlyYield: Keep $2,000, get content, creators get supported with yield
+- Traditional: Spend $360 supporting creators, get content
+- OnlyYield: Keep $2,000, support creators with yield, get content
 
 **Sarah's Options:**
 - Need emergency funds? Withdraw her $2,000 anytime
@@ -120,7 +121,7 @@ This is **Patreon, but with yield as the fee** - you never lose your principal.
 
 ---
 
-## 🌉 How LI.FI Helped Us
+## How LI.FI Helped Us
 
 LI.FI (Liquidity Finance) is the **critical infrastructure** that enables OnlyYield's seamless cross-chain and multi-asset operations. Without LI.FI, we would need to integrate with multiple bridges, DEXs, and handle complex routing logic ourselves. LI.FI abstracts all of this complexity into a unified SDK, dramatically simplifying our codebase and improving user experience.
 
@@ -178,7 +179,14 @@ const hash = await client.sendTransaction(transformTxRequest(quoteResponse.trans
 - **Better UX**: Donors don't need to understand bridges or Base ecosystem
 - **Gas Efficient**: Single transaction instead of multiple
 
-**Impact**: Reduced donor friction by **~80%** - from 4+ manual steps to 1 click.
+**Impact**: Reduced donor friction by approximately 80% - from 4+ manual steps to 1 click.
+
+**Real Execution Log**: See [`frontend/logs/bridge-and-vault-deposit.log`](./frontend/logs/bridge-and-vault-deposit.log) for a complete example of the deposit flow, including:
+- LI.FI Composer quote generation
+- Token approval process
+- Atomic bridge + deposit execution
+- Bridge status monitoring
+- Transaction confirmation on both source (Arbitrum) and destination (Base) chains
 
 ---
 
@@ -226,6 +234,12 @@ await executeRoute(route, executionOptions);
 - **Explorer Links**: LI.FI provides unified explorer links for tracking
 
 **Impact**: Users receive funds on their preferred chain without any manual bridge knowledge.
+
+**Real Execution Log**: See [`frontend/logs/cross-chain-withdraw.log`](./frontend/logs/cross-chain-withdraw.log) for a complete example of the withdrawal flow, including:
+- Withdrawal request processing
+- Operator execution on Base
+- LI.FI route discovery for cross-chain bridging
+- Bridge execution back to original chain
 
 ---
 
@@ -300,7 +314,7 @@ def execute_lifi_swap(
 - LI.FI automatically finds optimal routes and splits large swaps
 - Better slippage protection and gas optimization
 
-**Impact**: Agent can rebalance across assets with **optimal execution** - typically 0.1-0.5% better rates than single-DEX swaps.
+**Impact**: Agent can rebalance across assets with optimal execution - typically 0.1-0.5% better rates than single-DEX swaps.
 
 ---
 
@@ -336,7 +350,7 @@ const routeRequest = {
 
 const routeResponse = await getRoutes(routeRequest);
 if (!routeResponse.routes || routeResponse.routes.length === 0) {
-  logs.push(`  ⚠️  No bridge route found to ${targetChainConfig.name}`);
+  logs.push(`  Warning: No bridge route found to ${targetChainConfig.name}`);
   continue;
 }
 
@@ -360,7 +374,14 @@ const lifiExplorerLink = status.lifiExplorerLink;
 - **Unified Tracking**: Single LI.FI explorer link for all bridges
 - **Multi-Bridge Support**: LI.FI can split across multiple bridges if needed
 
-**Impact**: Recipients receive yield on their preferred chain **without any action required** - dramatically improving UX for public goods creators.
+**Impact**: Recipients receive yield on their preferred chain without any action required - dramatically improving UX for public goods creators.
+
+**Real Execution Log**: See [`frontend/logs/yield-distribution.log`](./frontend/logs/yield-distribution.log) for a complete example of the yield distribution flow, including:
+- Yield harvesting from strategies
+- Per-donation yield claiming
+- Cross-chain bridge execution (Base → Optimism)
+- LI.FI explorer link generation
+- Distribution to multiple recipients across different chains
 
 ---
 
@@ -374,7 +395,7 @@ const lifiExplorerLink = status.lifiExplorerLink;
 | **Yield Distribution** | Multiple bridge integrations | Unified LI.FI interface | 90% code reduction |
 | **Status Tracking** | Per-bridge tracking | Unified LI.FI explorer | Single source of truth |
 
-**Total Code Reduction**: LI.FI eliminated **~2000+ lines of bridge/DEX integration code** and replaced it with **~500 lines** of clean LI.FI SDK calls.
+**Total Code Reduction**: LI.FI eliminated approximately 2000+ lines of bridge/DEX integration code and replaced it with approximately 500 lines of clean LI.FI SDK calls.
 
 **Developer Experience**: Instead of maintaining integrations with 5+ bridges and 3+ DEXs, we maintain one LI.FI SDK integration.
 
@@ -425,37 +446,36 @@ The demo showcases the complete OnlyYield flow: cross-chain deposit, yield gener
 3. Vault supplies to Aave V3 Base (earning ~5% APY)
 4. Yield accrues automatically over time
 
-**The Magic**: Your principal stays untouched, but it's earning yield that supports creators.
+**Mechanism**: Your principal remains untouched while earning yield that supports creators.
 
 **Transaction Links:**
-- **Vault Supply to Aave**: `https://basescan.org/tx/[SUPPLY_TX_HASH]` *(placeholder)*
+- **Vault Supply to Aave**: [`https://basescan.org/tx/0x3cdfc159c10892b852e24d7bac17283694d2f3d5955856548d910914ef9e2ae7`](https://basescan.org/tx/0x3cdfc159c10892b852e24d7bac17283694d2f3d5955856548d910914ef9e2ae7)
 
 **Monitoring**: Check vault status via `scripts/check-vault-status.ts` or view in UI.
 
 ### Step 3: AI Agent Yield Optimization
 
-**UI Route**: Agent runs via API endpoint `/api/analyze` (or scheduled cron)
+**UI Route**: Agent runs via API endpoint `/api/analyze` (manually triggered for demo; production will use scheduled cron)
 
-> **Placeholder**: Add screenshot of agent analysis results
+![Agent Optimizing Yield Powered by LI.FI Swaps](./docs/excalidraw/agent-optimizing-yield-powered-by-swaps-lifi.png)
+
+*Multi-asset yield optimizer agent monitoring APY across four stablecoins (USDC, USDT, DAI, USDC.e), analyzing market data with AI decision-making, and executing token swaps via LI.FI to optimize yield allocation.*
 
 **What Happens:**
 1. Agent monitors APY for USDC, USDT, DAI, USDC.e on Aave
-2. AI (GPT-4) analyzes market data and determines optimal allocation
-3. If rebalancing needed:
+2. AI (GPT-4) analyzes market data (APY history, treasury balances, risk tolerance settings) and determines optimal allocation
+3. Agent identifies the optimal performing token based on APY comparison
+4. If rebalancing needed:
    - Agent swaps tokens via LI.FI (finds best route across DEXs)
+   - LI.FI aggregates liquidity across Uniswap, Curve, and other DEXs
    - Agent deposits swapped tokens into appropriate strategies
-
-**Transaction Links:**
-- **Token Swap (LI.FI)**: `https://scan.li.fi/tx/[SWAP_TX_HASH]` *(placeholder)*
-- **Deposit to Strategy**: `https://basescan.org/tx/[DEPOSIT_TX_HASH]` *(placeholder)*
+5. Agent manages treasury balance of each token to maximize yield
 
 **Agent Decision JSON**: See [`agent/llm_decision_history.json`](./agent/llm_decision_history.json) for full reasoning.
 
-> **Placeholder**: Add excalidraw diagram showing agent optimization flow
-
 ### Step 4: Yield Distribution (Creators Get Supported)
 
-**UI Route**: Operator triggers `/api/distribute-yield`
+**UI Route**: Operator manually triggers `/api/distribute-yield` (for demo purposes; production will use scheduled automation)
 
 > **Placeholder**: Add screenshot of yield distribution interface
 
@@ -493,9 +513,9 @@ The demo showcases the complete OnlyYield flow: cross-chain deposit, yield gener
 3. If original chain ≠ Base: LI.FI bridges funds back to original chain
 4. Supporter receives USDC on original chain
 
-**The Key Difference from Patreon**: 
-- **Patreon**: Cancel subscription, money is already gone
-- **OnlyYield**: Withdraw principal, get your money back
+**Key Difference from Patreon**: 
+- **Patreon**: Cancel subscription, money is already spent
+- **OnlyYield**: Withdraw principal, recover your deposited funds
 
 **Transaction Links:**
 - **Withdrawal**: [`https://basescan.org/tx/0x6a47184fdff8fab31f30fa1d246ac05a84552991d4c153d1f7196327ae7103a6`](https://basescan.org/tx/0x6a47184fdff8fab31f30fa1d246ac05a84552991d4c153d1f7196327ae7103a6)
@@ -504,46 +524,6 @@ The demo showcases the complete OnlyYield flow: cross-chain deposit, yield gener
 - Withdrawal amount: 0.1 USDC
 - Operator executed withdrawal on Base
 - Bridge route found for cross-chain withdrawal
-
----
-
-## The Problem: Why Traditional Creator Support Doesn't Work
-
-### The Patreon Problem: You Lose Your Money Forever
-
-When you support creators on Patreon (or similar platforms), you're **spending money**:
-- $10/month subscription = $120/year **gone forever**
-- You get content access, but your money is **never coming back**
-- Supporting multiple creators multiplies the cost
-- Many people can't afford to support creators they love
-
-**The Core Issue**: Supporting creators means **sacrificing your savings**. You have to choose between:
-- Supporting creators you love ❤️
-- Saving/investing your money 💰
-
-Most people can't do both.
-
-### The Yield Opportunity: Your Money Can Work for Creators AND You
-
-Your money sitting in DeFi earns yield (~5% APY on stablecoins):
-- $10,000 earns ~$500/year passively
-- But this yield typically just sits there or gets reinvested
-- **What if this yield could support creators instead?**
-
-**The Opportunity**: What if you could:
-- Keep your principal (your deposit stays yours)
-- Support creators with the yield (passive income)
-- Get exclusive content access (like Patreon)
-- Withdraw your principal anytime you need it
-- **Build healthy financial habits** - Invest instead of spend, use returns for subscriptions
-
-**The Challenge**: Making this seamless requires:
-- Cross-chain deposits (users on different chains)
-- Automated yield distribution
-- Multi-asset management
-- One-click UX
-
-This is what OnlyYield solves.
 
 ---
 
@@ -609,19 +589,380 @@ This is what OnlyYield solves.
 
 ### The OnlyYield Advantage Over Patreon
 
+Traditional creator support platforms like Patreon work well - they enable direct support and exclusive content access. OnlyYield offers the same benefits while allowing supporters to keep their principal. The following comparison illustrates the key difference:
+
+![Traditional Subscription Model - Patreon Flow](./docs/excalidraw/traditional-subscription-model.png)
+
+*Traditional subscription model: Users pay money upfront to support creators and gain exclusive content access. The money flows directly to creators.*
+
+![OnlyYield Model - Yield-Based Support Flow](./docs/excalidraw/onlyyield-model.png)
+
+*OnlyYield model: Users deposit principal into an ERC-4626 vault that generates yield. Only the yield is distributed to creators, while the principal remains under user control and can be withdrawn at any time.*
+
+#### Comparison Table
+
 | Feature | Patreon | OnlyYield |
 |---------|---------|-----------|
 | **Cost to Support** | Your money ($10/month) | Yield only (~$0.20/month on $500 deposit) |
-| **Principal** | Gone forever | Yours, withdraw anytime |
-| **After 1 Year** | $120 spent, $0 left | $500 still yours + yield earned |
-| **Content Access** | ✅ Yes | ✅ Yes |
+| **Principal** | Spent supporting creators | Yours, withdraw anytime |
+| **After 1 Year** | $120 spent supporting creators | $500 still yours + yield earned |
+| **Content Access** | Yes | Yes |
 | **Financial Habit** | Spending money | Investing money |
-| **Cross-Chain** | ❌ No | ✅ Yes |
-| **Yield Optimization** | ❌ No | ✅ AI-powered |
+| **Cross-Chain** | No | Yes |
+| **Yield Optimization** | No | AI-powered |
 
 **Example**: Supporting 3 creators at $10/month each
-- **Patreon**: Spend $360/year, money is gone
+- **Patreon**: Spend $360/year supporting creators directly
 - **OnlyYield**: Deposit $500, earn $25/year yield, distribute to creators, **keep your $500** + build investment habits
+
+---
+
+## How It All Works
+
+![OnlyYield Application Flow](./docs/excalidraw/onlyyield-application-flow.png)
+
+*Complete end-to-end flow of the OnlyYield platform, from user deposit to yield distribution and principal withdrawal.*
+
+The OnlyYield platform orchestrates a sophisticated flow that enables users to support creators with yield while preserving their principal. This section details each step of the process, from initial deposit to yield distribution and withdrawal.
+
+### Step 1: User Deposit (Cross-Chain via LI.FI Composer)
+
+**User Action**: User connects wallet on source chain (Ethereum, Polygon, Arbitrum, Optimism, or Base) and initiates a deposit.
+
+**Technical Execution**:
+
+1. **Frontend Request** (`frontend/app/donor/page.tsx`):
+   - User enters deposit amount and selects creators to support
+   - Frontend calls `/api/bridge-deposit` with deposit parameters
+   - API endpoint: [`frontend/app/api/bridge-deposit/route.ts`](./frontend/app/api/bridge-deposit/route.ts)
+
+2. **LI.FI Composer Quote Generation**:
+   ```typescript
+   const contractCallsQuoteRequest = {
+     fromChain: sourceChainConfig.chainId,  // e.g., ChainId.ARB (Arbitrum)
+     fromToken: sourceUsdc.address,         // USDC on source chain
+     fromAddress: donorAddress,
+     toChain: BASE_CHAIN_ID,                // Base Mainnet (8453)
+     toToken: baseUsdcAddress,              // USDC on Base
+     toAmount: amountInBaseUnits,
+     contractCalls: [{
+       toContractAddress: strategyAddress,  // YieldStrategy on Base
+       toContractCallData: depositTxData,    // Encoded deposit() call
+       toContractGasLimit: '500000',
+     }],
+   };
+   const quote = await getContractCallsQuote(contractCallsQuoteRequest);
+   ```
+
+3. **Atomic Bridge + Deposit Execution**:
+   - User signs **one transaction** on source chain
+   - LI.FI bridges USDC from source chain → Base Mainnet
+   - LI.FI automatically executes `YieldStrategy.deposit()` on Base
+   - Transaction is atomic: either both succeed or both revert
+
+4. **Contract Interaction**:
+   - `YieldStrategy.deposit(amount, user)` is called on Base
+   - Strategy captures any unrealized yield via `_updateUserYield(user)`
+   - Funds are deployed to `YieldVault` via `_deployFunds(amount)`
+   - Vault receives assets and mints shares to strategy
+   - Strategy mints strategy shares to user
+
+**Result**: User receives strategy shares representing their deposit, and the deposit is recorded in the database with transaction hash.
+
+**Transaction Example**: [`https://scan.li.fi/tx/0xef946cdf94b9e5db1609c3b5a3d4658b5f3cb1c22e4c1541d99b7079baa0f03a`](https://scan.li.fi/tx/0xef946cdf94b9e5db1609c3b5a3d4658b5f3cb1c22e4c1541d99b7079baa0f03a) - Arbitrum → Base deposit
+
+**Execution Log**: See [`frontend/logs/bridge-and-vault-deposit.log`](./frontend/logs/bridge-and-vault-deposit.log) for complete step-by-step execution.
+
+---
+
+### Step 2: Yield Generation (Aave V3)
+
+**Automatic Process**: Once funds are deposited, yield generation begins automatically.
+
+**Technical Flow**:
+
+1. **Vault Deployment**:
+   - `YieldVault` receives assets from `YieldStrategy`
+   - Vault is an ERC-4626 compliant contract that manages asset deployment
+
+2. **Aave V3 Supply**:
+   - Vault calls `supplyToAave(amount)` to supply assets to Aave V3 Pool on Base
+   - Aave returns aTokens (e.g., aUSDC) representing the supplied position
+   - Yield accrues continuously on the aToken balance
+
+3. **Yield Accrual Mechanism**:
+   - Aave V3 pays supply APY (~5% for stablecoins) on deposited assets
+   - Yield is reflected in increasing aToken balance over time
+   - Vault's `totalAssets()` increases as yield accrues
+   - Strategy share value increases proportionally
+
+4. **Per-User Yield Tracking**:
+   - `YieldStrategy` tracks each user's yield independently
+   - Yield is calculated lazily (on-demand) when users interact
+   - Formula: `userYield = (userShares / totalShares) * (currentAssets - lastReportedAssets)`
+
+**Result**: Assets earn yield continuously in Aave V3, and the yield is tracked per user for fair distribution.
+
+---
+
+### Step 3: Multi-Asset Yield Optimizer Agent
+
+**Purpose**: The AI-powered agent continuously monitors APY across multiple stablecoins and optimizes asset allocation to maximize yield for creators.
+
+**Note**: For demo purposes, the agent is manually triggered via `/api/analyze`. In production, it will run on a scheduled cron job (e.g., every 6 hours).
+
+**Agent Architecture** (`agent/api.py`):
+
+The agent uses GPT-4 (or GPT-4o) to analyze market conditions and make intelligent allocation decisions across four supported assets: USDC, USDT, DAI, and USDC.e.
+
+**Agent Decision-Making Process**:
+
+1. **Market Data Collection** (`get_market_context()`):
+   - **APY Monitoring**: Fetches current supply APY for all supported assets from Aave V3
+     - Queries Aave Pool contract for liquidity rate
+     - Converts rate to APY percentage
+     - Records APY in history for trend analysis
+   - **Treasury Balance Tracking**: Checks treasury wallet balance for each asset
+     - Queries ERC20 `balanceOf()` for USDC, USDT, DAI, USDC.e
+     - Calculates total treasury value (USD equivalent)
+   - **Vault Status**: Reads `YieldVault` balances
+     - Assets outside Aave (idle in vault)
+     - Assets inside Aave (supplied, earning yield)
+     - Total vault assets
+   - **Historical Analysis** (`get_historical_yield_metrics()`):
+     - APY trend (rising, falling, stable)
+     - 24h and 7d APY changes
+     - 7d and 30d average APY
+     - Volatility metrics (standard deviation)
+     - All-time high and low APY
+   - **Alternative Yields**: Fetches competitive yields from DefiLlama API
+     - Compares Aave yields with other Base Mainnet protocols
+   - **Gas Cost Estimation**: Calculates transaction costs
+     - Estimates gas price and transaction size
+     - Converts to USD using ETH price from CoinGecko
+
+2. **LLM Analysis** (`ask_llm_for_decision()`):
+   - **System Prompt**: Instructs GPT-4 to act as a DeFi yield strategist
+     - Risk tolerance setting (conservative, moderate, aggressive)
+     - Multi-asset allocation framework
+     - Swap cost-benefit analysis guidelines
+   - **Market Summary**: Comprehensive data package sent to LLM:
+     ```
+     - APY for each asset (USDC, USDT, DAI, USDC.e)
+     - Treasury balances for each asset
+     - Total treasury value
+     - Historical yield metrics (trends, volatility, changes)
+     - Alternative protocol yields
+     - Gas cost estimates
+     - Vault status
+     - Decision history
+     ```
+   - **LLM Response Format**:
+     ```json
+     {
+       "decision": "DEPOSIT" or "HOLD",
+       "confidence": 0-100,
+       "reasoning": "detailed explanation",
+       "allocation": {
+         "USDC": 0-100,
+         "USDT": 0-100,
+         "DAI": 0-100,
+         "USDC.e": 0-100
+       },
+       "swaps_needed": [
+         {"from": "USDC", "to": "USDT", "amount_percent": 25, "reason": "..."}
+       ],
+       "key_factors": [...],
+       "projected_30day_return": ...,
+       "projected_90day_return": ...,
+       "risks": [...],
+       "opportunities": [...]
+     }
+     ```
+
+3. **Decision Execution** (`make_decision()`):
+   - **If Decision is DEPOSIT**:
+     a. **Token Swaps** (if needed):
+        - Iterates through `swaps_needed` from LLM response
+        - For each swap:
+          - Calculates swap amount: `totalValue * (amount_percent / 100)`
+          - Converts to base units (with decimals)
+          - Calls `execute_lifi_swap()` which:
+            - Executes Node.js script `agent/lifi_swap.js`
+            - Script uses LI.FI SDK to find optimal swap route
+            - LI.FI aggregates across Uniswap, Curve, and other DEXs
+            - Executes swap with 3% slippage tolerance
+            - Returns transaction hash
+        - Updates expected balances after swaps
+     b. **Asset Deposits**:
+        - Iterates through `allocation` from LLM response
+        - For each asset with allocation > 0:
+          - Calculates deposit amount: `totalValue * (allocation_pct / 100)`
+          - Verifies sufficient balance (after swaps)
+          - Calls `execute_orchestrator_deposit()`:
+            - Calls `YieldOrchestrator.depositERC20()`
+            - **Important**: Uses `inputAsset == targetAsset` (no internal swap)
+            - Deposits into appropriate strategy for that asset
+            - Strategy routes to `YieldVault`
+            - Vault supplies to Aave V3
+   - **If Decision is HOLD**:
+     - No transactions executed
+     - Decision is logged for future reference
+
+**Key Design Decisions**:
+
+- **Why LI.FI for Swaps**: The agent uses LI.FI instead of the orchestrator's internal swap because:
+  - LI.FI aggregates liquidity across multiple DEXs (Uniswap, Curve, etc.)
+  - Better rates through optimal routing
+  - Automatic route splitting for large swaps
+  - Superior slippage protection
+  - Future-proof (easy to add new DEXs)
+
+- **Why External Swaps Before Deposit**: The agent swaps tokens externally via LI.FI, then deposits the already-swapped tokens. This ensures:
+  - Optimal execution rates
+  - Clear separation of concerns
+  - Better gas efficiency
+
+**Agent Decision History**: See [`agent/llm_decision_history.json`](./agent/llm_decision_history.json) for complete LLM reasoning, market analysis, and execution results.
+
+**Code References**:
+- Agent API: [`agent/api.py`](./agent/api.py)
+- LI.FI Swap Script: [`agent/lifi_swap.js`](./agent/lifi_swap.js)
+- Market Context: Lines 748-777 in `agent/api.py`
+- LLM Decision: Lines 855-1008 in `agent/api.py`
+- Execution Logic: Lines 1010-1158 in `agent/api.py`
+
+---
+
+### Step 4: Yield Distribution (Cross-Chain to Creators)
+
+**Trigger**: Operator manually calls `/api/distribute-yield` endpoint to harvest and distribute yield to creators.
+
+**Note**: For demo purposes, yield distribution is manually triggered by the operator. In production, this will be automated on a schedule (e.g., daily or weekly).
+
+**Technical Execution** (`frontend/app/api/distribute-yield/route.ts`):
+
+1. **Yield Harvesting**:
+   - Operator calls `YieldOrchestrator.harvestStrategy(strategy)`
+   - For each strategy, `strategy.report()` is called:
+     - Calculates profit: `currentAssets - lastReportedAssets`
+     - Updates `lastReportedAssets` to current value
+     - Profit represents yield earned since last report
+
+2. **Per-User Yield Claiming**:
+   - For each active donation (non-withdrawn):
+     - Operator calls `YieldStrategy.claimUserYield(donor)`
+     - Strategy captures unrealized yield via `_updateUserYield(donor)`
+     - Claimed amount = `userAccumulatedYield[donor]`
+     - Yield is withdrawn from vault if needed
+     - Yield is transferred to operator wallet
+     - `userAccumulatedYield[donor]` is reset to 0
+
+3. **Yield Splitting**:
+   - Operator splits total claimed yield equally among selected recipients
+   - Formula: `recipientAmount = totalYield / recipientCount`
+   - Each recipient receives equal share regardless of donation amount
+
+4. **Cross-Chain Distribution**:
+   - For each recipient:
+     - If recipient's preferred chain = Base: Direct USDC transfer
+     - If recipient's preferred chain ≠ Base: LI.FI bridge execution
+       ```typescript
+       const routeRequest = {
+         toAddress: recipientAddress,
+         fromAddress: operatorAddress,
+         fromChainId: ChainId.BAS,
+         fromAmount: recipientAmount,
+         fromTokenAddress: baseUsdcAddress,
+         toChainId: targetChainConfig.chainId,  // e.g., ChainId.OPT
+         toTokenAddress: targetUsdcAddress,
+         options: { slippage: 0.03 },
+       };
+       const route = await getRoutes(routeRequest);
+       await executeRoute(route, executionOptions);
+       ```
+   - LI.FI finds optimal bridge route automatically
+   - Bridge status is monitored via `getStatus()`
+   - LI.FI explorer link is generated for tracking
+
+**Result**: Creators receive yield on their preferred chain, and distribution records are saved to the database.
+
+**Transaction Example**: [`https://scan.li.fi/tx/0x20eedaf3548e32d1870c0e100742791686d4276588cc7e6be11805b7108732c0`](https://scan.li.fi/tx/0x20eedaf3548e32d1870c0e100742791686d4276588cc7e6be11805b7108732c0) - Base → Optimism yield distribution
+
+**Execution Log**: See [`frontend/logs/yield-distribution.log`](./frontend/logs/yield-distribution.log) for complete distribution flow.
+
+---
+
+### Step 5: User Withdrawal (Cross-Chain Back to Original Chain)
+
+**User Action**: User requests withdrawal of their principal from the donor dashboard.
+
+**Technical Execution** (`frontend/app/donor/page.tsx`):
+
+1. **Withdrawal Request**:
+   - User calls `/api/orchestrate/withdraw` with donation ID and amount
+   - API validates withdrawal eligibility and calculates shares to withdraw
+
+2. **Operator Execution**:
+   - Operator executes `YieldOrchestrator.withdrawERC20()` on Base
+   - Strategy burns user's shares and withdraws assets from vault
+   - Assets are transferred to user's address on Base
+
+3. **Cross-Chain Bridging** (if original chain ≠ Base):
+   - Frontend detects if withdrawal is cross-chain
+   - LI.FI route is requested:
+     ```typescript
+     const routeRequest = {
+       toAddress: userAddress,
+       fromAddress: userAddress,
+       fromChainId: ChainId.BAS,
+       fromAmount: withdrawalAmount,
+       fromTokenAddress: baseUsdcAddress,
+       toChainId: originalChainId,  // e.g., ChainId.ARB
+       toTokenAddress: originalUsdcAddress,
+       options: { slippage: 0.03 },
+     };
+     ```
+   - User signs bridge transaction
+   - LI.FI bridges USDC from Base → original chain
+   - User receives USDC on original chain
+
+**Result**: User recovers their principal on their original chain, and the donation is marked as withdrawn in the database.
+
+**Transaction Example**: [`https://basescan.org/tx/0x6a47184fdff8fab31f30fa1d246ac05a84552991d4c153d1f7196327ae7103a6`](https://basescan.org/tx/0x6a47184fdff8fab31f30fa1d246ac05a84552991d4c153d1f7196327ae7103a6) - Withdrawal execution
+
+**Execution Log**: See [`frontend/logs/cross-chain-withdraw.log`](./frontend/logs/cross-chain-withdraw.log) for complete withdrawal flow.
+
+---
+
+### Complete System Flow Summary
+
+```
+1. User (Arbitrum) → LI.FI Composer → Bridge + Deposit → Base → YieldStrategy → YieldVault → Aave V3
+2. Yield accrues continuously on aTokens in Aave V3
+3. AI Agent (manually triggered for demo):
+   a. Monitors APY for USDC, USDT, DAI, USDC.e
+   b. Analyzes market data (APY, balances, history, gas costs)
+   c. GPT-4 makes allocation decision
+   d. Executes swaps via LI.FI (if needed)
+   e. Deposits optimized allocation into strategies
+4. Operator (manually triggered for demo):
+   a. Harvests yield via YieldOrchestrator.harvestStrategy()
+   b. Claims per-user yield via YieldStrategy.claimUserYield()
+   c. Splits yield equally among creators
+   d. Bridges yield to creators' preferred chains via LI.FI
+5. User (anytime):
+   a. Requests withdrawal
+   b. Operator executes withdrawal on Base
+   c. LI.FI bridges funds back to original chain (if needed)
+```
+
+**Key Technologies**:
+- **LI.FI**: Cross-chain bridging (deposits, withdrawals, yield distribution) and token swaps (agent optimization)
+- **Aave V3**: Yield generation via supply APY on stablecoins
+- **GPT-4/GPT-4o**: AI-powered multi-asset allocation decisions
+- **ERC-4626**: Standardized vault interface for composability
+- **Per-User Yield Tracking**: Fair, granular yield distribution
 
 ---
 
@@ -672,6 +1013,8 @@ const contractCallsQuoteRequest = {
 **Example Transaction:**
 - **Real Example**: [`https://scan.li.fi/tx/0xef946cdf94b9e5db1609c3b5a3d4658b5f3cb1c22e4c1541d99b7079baa0f03a`](https://scan.li.fi/tx/0xef946cdf94b9e5db1609c3b5a3d4658b5f3cb1c22e4c1541d99b7079baa0f03a) - Shows bridge + deposit in one atomic transaction (Arbitrum → Base)
 
+**Complete Execution Log**: See [`frontend/logs/bridge-and-vault-deposit.log`](./frontend/logs/bridge-and-vault-deposit.log) for detailed step-by-step execution, including quote generation, token approval, transaction execution, and bridge status monitoring.
+
 ---
 
 ## How LI.FI Bridging Enables Easy Cross-Chain Creator Payouts
@@ -721,6 +1064,8 @@ const routeRequest = {
 **Example Transaction:**
 - **Real Example**: [`https://scan.li.fi/tx/0x20eedaf3548e32d1870c0e100742791686d4276588cc7e6be11805b7108732c0`](https://scan.li.fi/tx/0x20eedaf3548e32d1870c0e100742791686d4276588cc7e6be11805b7108732c0) - Shows cross-chain yield distribution (Base → Optimism)
 
+**Complete Execution Log**: See [`frontend/logs/yield-distribution.log`](./frontend/logs/yield-distribution.log) for detailed yield harvesting, claiming, and cross-chain distribution execution.
+
 **Impact:**
 - Creators don't need Base wallets or knowledge of Base ecosystem
 - Yield can be distributed to creators on Ethereum, Polygon, Arbitrum, etc.
@@ -729,31 +1074,11 @@ const routeRequest = {
 
 ---
 
-## Cross-Chain Architecture
-
-> **Placeholder**: Add Excalidraw diagram showing:
-> - User on Ethereum depositing
-> - LI.FI bridge to Base
-> - Yield generation on Base
-> - Yield distribution back to multiple chains
-> - All with LI.FI explorer links
-
-**Key Components:**
-- **Source Chains**: Ethereum, Polygon, Arbitrum, Optimism, Base
-- **Destination Chain**: Base Mainnet (where yield strategies operate)
-- **Distribution Chains**: Any chain (recipient's choice)
-- **Bridge Infrastructure**: LI.FI (handles all cross-chain operations)
-
----
-
 ## Agent Optimizing Yield Powered by LI.FI Swaps
 
-> **Placeholder**: Add Excalidraw diagram showing:
-> - Agent monitoring APY across 4 assets
-> - AI decision-making process
-> - LI.FI swap execution (aggregating across DEXs)
-> - Deposit into optimal strategy
-> - All with transaction links
+![Agent Optimizing Yield Powered by LI.FI Swaps](./docs/excalidraw/agent-optimizing-yield-powered-by-swaps-lifi.png)
+
+*Multi-asset yield optimizer agent monitoring APY across four stablecoins, using AI to make allocation decisions, and executing swaps via LI.FI to optimize yield.*
 
 **Flow:**
 1. **Agent monitors** APY for USDC, USDT, DAI, USDC.e on Aave V3 Base
@@ -777,13 +1102,9 @@ const routeRequest = {
 
 ## How It All Works
 
-> **Placeholder**: Add Excalidraw diagram showing complete system flow:
-> - User deposit (cross-chain via LI.FI)
-> - Yield generation (Aave V3)
-> - AI agent optimization (LI.FI swaps)
-> - Yield distribution (cross-chain via LI.FI)
-> - All contracts and their interactions
-> - All transaction links
+![OnlyYield Application Flow](./docs/excalidraw/onlyyield-application-flow.png)
+
+*Complete end-to-end flow of the OnlyYield platform, from user deposit to yield distribution and principal withdrawal.*
 
 **Complete Flow:**
 
@@ -828,6 +1149,18 @@ const routeRequest = {
 
 **Production**: Should run on a schedule (e.g., every 6 hours) to continuously optimize yield.
 
+### Manual Yield Distribution Trigger Instead of Automation
+
+**What**: Yield distribution is manually triggered by the operator via `/api/distribute-yield` endpoint instead of running on a scheduled automation.
+
+**Why**: For demo purposes, manual triggering allows controlled execution, easier debugging, and demonstration of the distribution flow.
+
+**Implementation**: 
+- Current: Operator manually calls `POST /api/distribute-yield` to trigger distribution
+- Future: Scheduled automation (e.g., daily or weekly) to automatically harvest and distribute yield
+
+**Production**: Should run on a schedule (e.g., daily) to automatically distribute yield to creators without manual intervention.
+
 **Other Tradeoffs:**
 - **Limited Asset Support**: Currently supports 4 stablecoins (USDC, USDT, DAI, USDC.e). Production should support more.
 - **Single Strategy**: Currently one strategy per asset. Production could have multiple strategies per asset.
@@ -839,14 +1172,165 @@ const routeRequest = {
 
 **Detailed contract explanations are in [`contracts/README.md`](./contracts/README.md).**
 
-### Quick Overview
+### How Contracts Work Together
 
-| Contract | Purpose | Key Features |
-|----------|---------|--------------|
-| **YieldVault** | ERC-4626 vault | Supplies to Aave V3, manages performance fees |
-| **YieldStrategy** | Strategy token | Per-user yield tracking, yield accumulation |
-| **YieldOrchestrator** | Central operator | Deposits, withdrawals, harvesting, cross-asset operations |
-| **YieldReallocator** | Migration | Strategy-to-strategy migration with aggregator support |
+The OnlyYield system uses **5 core contracts** that work together in a layered architecture:
+
+#### Contract Roles
+
+| Contract | Role | Responsibility |
+|----------|------|----------------|
+| **YieldOrchestrator** | **Central Coordinator** | Routes operations, manages multi-asset strategies, harvests yield |
+| **YieldStrategy** | **Per-Asset Manager** | Tracks per-user yield, manages deposits/withdrawals per asset (USDC, USDT, etc.) |
+| **YieldVault** | **ERC-4626 Vault** | Supplies assets to Aave V3, earns yield, manages fees |
+| **YieldDistributor** | **Recipient Manager** | Manages creator addresses, distributes yield equally |
+| **YieldReallocator** | **Migration Handler** | Enables strategy-to-strategy migrations with swaps |
+
+#### Visual Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    USER / AI AGENT                          │
+│              (Deposits, Withdrawals, Claims)                │
+└───────────────────────┬─────────────────────────────────────┘
+                        │
+                        ▼
+        ┌───────────────────────────────────────-┐
+        │     YieldOrchestrator                  │
+        │     Central Coordinator                │
+        │                                        │
+        │  • strategyOf[asset] → strategy        │
+        │  • harvestAll() → harvests all         │
+        │  • depositERC20() → routes to strategy │
+        │  • withdrawERC20() → routes to strategy│
+        │  • reallocate() → migrates positions   │
+        └───────┬───────────────────┬───────────-┘
+                │                   │
+        ┌───────┴───────┐   ┌───────┴───────┐
+        │               │   │               │
+        ▼               ▼   ▼               ▼
+┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+│YieldStrategy │ │YieldStrategy │ │YieldStrategy │
+│   (USDC)     │ │   (USDT)     │ │   (DAI)      │
+│              │ │              │ │              │
+│ Per-User     │ │ Per-User     │ │ Per-User     │
+│ Yield        │ │ Yield        │ │ Yield        │
+│ Tracking     │ │ Tracking     │ │ Tracking     │
+│              │ │              │ │              │
+│• deposit()   │ │• deposit()   │ │• deposit()   │
+│• withdraw()  │ │• withdraw()  │ │• withdraw()  │
+│• claimYield()│ │• claimYield()│ │• claimYield()│
+│• report()    │ │• report()    │ │• report()    │
+└──────┬───────┘ └──────┬───────┘ └──────┬───────┘
+       │                │                │
+       └────────────────┼────────────────┘
+                        │
+                        ▼
+              ┌──────────────────-┐
+              │   YieldVault      │
+              │   ERC-4626        │
+              │                   │
+              │• deposit()        │
+              │• withdraw()       │
+              │• supplyToAave()   │
+              │• Performance fees │
+              └─────────┬─────────┘
+                        │
+                        ▼
+              ┌──────────────────-┐
+              │   Aave V3 Pool    │
+              │   Yield Source    │
+              │                   │
+              │• Supplies assets  │
+              │• Earns ~5% APY    │
+              │• Returns aTokens  │
+              └───────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│              Yield Distribution Flow                        │
+│                                                             │
+│  Operator → YieldOrchestrator.harvestAll()                  │
+│       ↓                                                     │
+│  For each strategy: strategy.report()                       │
+│       ↓                                                     │
+│  For each user: YieldStrategy.claimUserYield(user)          │
+│       ↓                                                     │
+│  YieldDistributor.distribute(token, amount)                 │
+│       ↓                                                     │
+│  Split equally → Transfer to creators                       │
+│       ↓                                                     │
+│  LI.FI Bridge → Creator's preferred chain                   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+#### Complete Deposit Flow
+
+```
+1. User deposits 100 USDC
+   ↓
+2. LI.FI bridges from Arbitrum → Base (atomic)
+   ↓
+3. YieldStrategy.deposit(100 USDC, user)
+   → _updateUserYield(user)  // Capture any unrealized yield
+   → _deployFunds(100 USDC)  // Send to vault
+   → YieldVault.deposit(100 USDC, strategy)
+   → Vault supplies 100 USDC to Aave V3
+   → Strategy receives vault shares
+   → Strategy mints strategy shares to user
+   ↓
+4. Yield accrues on Aave
+   → aToken balance increases
+   → Vault totalAssets() increases
+   → Strategy share value increases
+   → User's position value increases
+```
+
+#### Yield Distribution Flow
+
+```
+1. Operator calls YieldOrchestrator.harvestAll()
+   ↓
+2. For each strategy:
+   → strategy.report()
+   → Calculates profit = currentAssets - lastReportedAssets
+   → Updates lastReportedAssets
+   ↓
+3. For each active supporter:
+   → YieldStrategy.claimUserYield(supporter)
+   → _updateUserYield(supporter)  // Capture unrealized yield
+   → claimedAmount = userAccumulatedYield[supporter]
+   → Withdraw from vault if needed
+   → Transfer to operator
+   → Reset userAccumulatedYield[supporter] = 0
+   ↓
+4. Operator splits yield equally among creators
+   ↓
+5. For each creator:
+   → If Base: Direct transfer
+   → If other chain: LI.FI bridge to creator's chain
+```
+
+#### Key Design Principles
+
+1. **Layered Architecture**: Each layer has a single responsibility
+   - Orchestrator = Routing & Coordination
+   - Strategy = Per-Asset Logic & User Tracking
+   - Vault = Aave Integration & ERC-4626 Compliance
+
+2. **Per-User Yield Tracking**: Unlike traditional vaults, each user's yield is tracked independently
+   - Fair distribution based on share ownership
+   - Lazy accumulation (calculated on-demand)
+   - Can claim yield without withdrawing principal
+
+3. **Multi-Asset Support**: One strategy per asset, all managed by orchestrator
+   - `strategyOf[USDC]` → USDC strategy
+   - `strategyOf[USDT]` → USDT strategy
+   - AI agent can rebalance across assets
+
+4. **ERC-4626 Compliance**: YieldVault follows industry standard
+   - Standardized share calculation
+   - Composable with other DeFi protocols
+   - Preview functions for UX
 
 **See [`contracts/README.md`](./contracts/README.md) for:**
 - Detailed function explanations
@@ -904,18 +1388,50 @@ const routeRequest = {
 
 ---
 
-## License
+## Conclusion
+
+OnlyYield represents a new paradigm in creator support—one where supporters keep their principal while creators receive sustainable, yield-based funding. By combining the familiar subscription model of platforms like Patreon with the financial benefits of DeFi yield generation, we enable a win-win scenario for both creators and their supporters.
+
+### Key Achievements
+
+- **Principal Preservation**: Supporters maintain full control of their deposited funds
+- **Cross-Chain Flexibility**: Seamless deposits and payouts across multiple blockchain networks
+- **AI-Powered Optimization**: Intelligent multi-asset yield maximization for better creator support
+- **One-Click UX**: Simplified user experience through LI.FI's atomic bridge and contract execution
+- **Automated Distribution**: Set-and-forget yield distribution to creators on their preferred chains
+
+### The Future of Creator Support
+
+OnlyYield demonstrates how Web3 infrastructure can enhance traditional creator economy models. By leveraging:
+- **LI.FI** for seamless cross-chain operations and optimal token swaps
+- **ERC-4626** standards for composable, secure vault architecture
+- **AI agents** for intelligent yield optimization
+- **Per-user yield tracking** for fair, granular distribution
+
+We've built a platform that not only supports creators but also promotes healthy financial habits among supporters.
+
+### Next Steps
+
+For production deployment, consider:
+- Implementing scheduled automation for agent optimization and yield distribution
+- Expanding asset support beyond the current 4 stablecoins
+- Adding multiple strategies per asset for diversified yield sources
+- Implementing user-initiated operations alongside operator-executed flows
+- Removing demo workarounds (yield bump) for real-world yield amounts
+
+### Resources
+
+- **Contract Documentation**: See [`contracts/README.md`](./contracts/README.md) for detailed contract architecture
+- **Transaction Logs**: Review [`frontend/logs/`](./frontend/logs/) for execution examples
+- **Agent Decisions**: Analyze [`agent/llm_decision_history.json`](./agent/llm_decision_history.json) for AI reasoning
+- **Base Mainnet Contracts**: All deployed contracts are verified on [BaseScan](https://basescan.org)
+
+### Contributing
+
+Contributions are welcome! Please open an issue or pull request to discuss improvements, report bugs, or suggest new features.
+
+### License
 
 MIT
 
 ---
-
-## Contributing
-
-Contributions are welcome! Please open an issue or pull request.
-
----
-
-## Support
-
-For questions or support, please open an issue on GitHub.

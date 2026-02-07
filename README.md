@@ -1065,7 +1065,7 @@ const routeRequest = {
 
 ## Agent Optimizing Yield Powered by LI.FI Swaps
 
-<img width="1442" height="756" alt="Screenshot 2026-02-07 at 1 16 39 AM" src="https://github.com/user-attachments/assets/8264bc05-b9ae-47fb-9ec4-9686aaf5fe47" />
+<img width="615" height="412" alt="Screenshot 2026-02-07 at 1 17 04 AM" src="https://github.com/user-attachments/assets/61f29bdd-c43e-4268-a77a-4887bccc6aea" />
 
 *Multi-asset yield optimizer agent monitoring APY across four stablecoins, using AI to make allocation decisions, and executing swaps via LI.FI to optimize yield.*
 

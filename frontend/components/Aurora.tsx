@@ -153,8 +153,7 @@ export default function Aurora(props: {
 
     const geometry = new Triangle(gl);
     if ((geometry as any).attributes.uv) {
-      // @ts-expect-error - uv attribute exists but not in types
-      delete geometry.attributes.uv;
+      delete (geometry as any).attributes.uv;
     }
 
     const colorStopsArray = colorStops.map((hex) => {
@@ -208,4 +207,3 @@ export default function Aurora(props: {
 
   return <div ref={ctnDom} className="aurora-container" />;
 }
-

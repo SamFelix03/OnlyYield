@@ -34,7 +34,17 @@ type RotatingTextProps = {
   mainClassName?: string;
   splitLevelClassName?: string;
   elementLevelClassName?: string;
-} & React.HTMLAttributes<HTMLSpanElement>;
+} & Omit<
+  React.HTMLAttributes<HTMLSpanElement>,
+  | "onDrag"
+  | "onDragStart"
+  | "onDragEnd"
+  | "onAnimationStart"
+  | "onAnimationEnd"
+  | "onAnimationIteration"
+  | "onTransitionStart"
+  | "onTransitionEnd"
+>;
 
 const RotatingText = forwardRef<any, RotatingTextProps>((props, ref) => {
   const {
@@ -222,4 +232,3 @@ const RotatingText = forwardRef<any, RotatingTextProps>((props, ref) => {
 
 RotatingText.displayName = "RotatingText";
 export default RotatingText;
-

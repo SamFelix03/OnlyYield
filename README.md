@@ -1,5 +1,10 @@
 # OnlyYield - Support Creators with Yield, Keep Your Money
 
+<p align="center">
+<img width="763" height="327" alt="onlyYieldLogo" src="https://github.com/user-attachments/assets/6efd77d8-f937-4b92-a0b4-60605f05e269" />
+</p>
+
+
 **OnlyYield** is like Patreon, but with a key difference: you keep your principal. Traditional creator support platforms work great - they enable direct support and exclusive content access. OnlyYield offers the same benefits while allowing you to support creators with **yield** - the passive income your money earns - instead of spending your principal. You keep your money, creators get supported, and you unlock exclusive content.
 
 ## The Opportunity: Support Creators While Keeping Your Money
@@ -18,7 +23,7 @@ Traditional creator support platforms like Patreon are excellent - they enable c
 - You can support creators while preserving your principal
 - Your money earns yield that supports creators, but you keep the original amount
 
-## The OnlyYield Solution: Support Creators with Yield, Keep Your Principal
+## The Solution: Support Creators with Yield, Keep Your Principal
 
 **OnlyYield Flow:**
 1. You deposit $500 USDC (or any amount) - **this is YOUR money, you keep it**
@@ -35,6 +40,18 @@ Traditional creator support platforms like Patreon are excellent - they enable c
 - Your money keeps earning yield while supporting creators
 - Cross-chain support - deposit from any chain, creators receive on their preferred chain
 - **Promotes healthy investment habits** - Instead of spending on subscriptions, you invest and use the returns
+
+### Difference Vs Patreon
+
+Traditional creator support platforms like Patreon work well - they enable direct support and exclusive content access. OnlyYield offers the same benefits while allowing supporters to keep their principal. The following comparison illustrates the key difference:
+
+<img width="977" height="625" alt="Screenshot 2026-02-07 at 12 07 30 AM" src="https://github.com/user-attachments/assets/7951f5e8-b33b-4049-a8f8-994a9de90da0" />
+
+*Traditional subscription model: Users pay money upfront to support creators and gain exclusive content access. The money flows directly to creators.*
+
+<img width="1035" height="592" alt="Screenshot 2026-02-07 at 12 20 30 AM" src="https://github.com/user-attachments/assets/5eaa6598-e97c-4a9e-a123-c40298f41e50" />
+
+*OnlyYield model: Users deposit principal into an ERC-4626 vault that generates yield. Only the yield is distributed to creators, while the principal remains under user control and can be withdrawn at any time.*
 
 ### Real-World Example: Sarah's Story
 
@@ -414,7 +431,7 @@ The demo showcases the complete OnlyYield flow: cross-chain deposit, yield gener
 
 **UI Route**: `/donor` (Donor Dashboard)
 
-> **Placeholder**: Add screenshot of donor dashboard
+<img width="1146" height="724" alt="Screenshot 2026-02-07 at 9 57 04 AM" src="https://github.com/user-attachments/assets/47f0d4a7-41c4-4309-8889-4dc712e1ee4a" />
 
 **What Happens:**
 1. User connects wallet on source chain (e.g., Ethereum)
@@ -457,7 +474,7 @@ The demo showcases the complete OnlyYield flow: cross-chain deposit, yield gener
 
 **UI Route**: Agent runs via API endpoint `/api/analyze` (manually triggered for demo; production will use scheduled cron)
 
-![Agent Optimizing Yield Powered by LI.FI Swaps](./docs/excalidraw/agent-optimizing-yield-powered-by-swaps-lifi.png)
+<img width="615" height="412" alt="Screenshot 2026-02-07 at 1 17 04 AM" src="https://github.com/user-attachments/assets/1f73f09b-93f2-498b-8fbf-58aee4cc6af9" />
 
 *Multi-asset yield optimizer agent monitoring APY across four stablecoins (USDC, USDT, DAI, USDC.e), analyzing market data with AI decision-making, and executing token swaps via LI.FI to optimize yield allocation.*
 
@@ -477,7 +494,7 @@ The demo showcases the complete OnlyYield flow: cross-chain deposit, yield gener
 
 **UI Route**: Operator manually triggers `/api/distribute-yield` (for demo purposes; production will use scheduled automation)
 
-> **Placeholder**: Add screenshot of yield distribution interface
+<img width="1146" height="749" alt="Screenshot 2026-02-07 at 9 58 02 AM" src="https://github.com/user-attachments/assets/98dd91c0-905a-492c-80cb-8aadc876339a" />
 
 **What Happens:**
 1. Operator harvests yield via `YieldOrchestrator.harvestStrategy()`
@@ -505,7 +522,7 @@ The demo showcases the complete OnlyYield flow: cross-chain deposit, yield gener
 
 **UI Route**: `/donor` (Supporter Dashboard - Withdrawal Section)
 
-> **Placeholder**: Add screenshot of withdrawal interface
+<img width="1146" height="749" alt="Screenshot 2026-02-07 at 9 58 32 AM" src="https://github.com/user-attachments/assets/fee3becd-ed60-421b-aea9-d978e35fdddb" />
 
 **What Happens:**
 1. Supporter requests withdrawal (like canceling a Patreon subscription)
@@ -587,39 +604,11 @@ The demo showcases the complete OnlyYield flow: cross-chain deposit, yield gener
 - Builds long-term wealth while enjoying content
 - Teaches investment-based approach to recurring expenses
 
-### The OnlyYield Advantage Over Patreon
-
-Traditional creator support platforms like Patreon work well - they enable direct support and exclusive content access. OnlyYield offers the same benefits while allowing supporters to keep their principal. The following comparison illustrates the key difference:
-
-![Traditional Subscription Model - Patreon Flow](./docs/excalidraw/traditional-subscription-model.png)
-
-*Traditional subscription model: Users pay money upfront to support creators and gain exclusive content access. The money flows directly to creators.*
-
-![OnlyYield Model - Yield-Based Support Flow](./docs/excalidraw/onlyyield-model.png)
-
-*OnlyYield model: Users deposit principal into an ERC-4626 vault that generates yield. Only the yield is distributed to creators, while the principal remains under user control and can be withdrawn at any time.*
-
-#### Comparison Table
-
-| Feature | Patreon | OnlyYield |
-|---------|---------|-----------|
-| **Cost to Support** | Your money ($10/month) | Yield only (~$0.20/month on $500 deposit) |
-| **Principal** | Spent supporting creators | Yours, withdraw anytime |
-| **After 1 Year** | $120 spent supporting creators | $500 still yours + yield earned |
-| **Content Access** | Yes | Yes |
-| **Financial Habit** | Spending money | Investing money |
-| **Cross-Chain** | No | Yes |
-| **Yield Optimization** | No | AI-powered |
-
-**Example**: Supporting 3 creators at $10/month each
-- **Patreon**: Spend $360/year supporting creators directly
-- **OnlyYield**: Deposit $500, earn $25/year yield, distribute to creators, **keep your $500** + build investment habits
-
 ---
 
 ## How It All Works
 
-![OnlyYield Application Flow](./docs/excalidraw/onlyyield-application-flow.png)
+<img width="1442" height="756" alt="Screenshot 2026-02-07 at 1 16 39 AM" src="https://github.com/user-attachments/assets/bba876a2-9c0a-4934-b9ae-57e2980d910b" />
 
 *Complete end-to-end flow of the OnlyYield platform, from user deposit to yield distribution and principal withdrawal.*
 
@@ -1076,7 +1065,7 @@ const routeRequest = {
 
 ## Agent Optimizing Yield Powered by LI.FI Swaps
 
-![Agent Optimizing Yield Powered by LI.FI Swaps](./docs/excalidraw/agent-optimizing-yield-powered-by-swaps-lifi.png)
+<img width="1442" height="756" alt="Screenshot 2026-02-07 at 1 16 39 AM" src="https://github.com/user-attachments/assets/8264bc05-b9ae-47fb-9ec4-9686aaf5fe47" />
 
 *Multi-asset yield optimizer agent monitoring APY across four stablecoins, using AI to make allocation decisions, and executing swaps via LI.FI to optimize yield.*
 
@@ -1102,7 +1091,7 @@ const routeRequest = {
 
 ## How It All Works
 
-![OnlyYield Application Flow](./docs/excalidraw/onlyyield-application-flow.png)
+<img width="1442" height="756" alt="Screenshot 2026-02-07 at 1 16 39 AM" src="https://github.com/user-attachments/assets/a626ddcd-2586-4468-921f-8533f1a19b82" />
 
 *Complete end-to-end flow of the OnlyYield platform, from user deposit to yield distribution and principal withdrawal.*
 

@@ -544,68 +544,6 @@ The demo showcases the complete OnlyYield flow: cross-chain deposit, yield gener
 
 ---
 
-## Our Solution: Patreon, But With Yield as the Fee
-
-**OnlyYield** is **Patreon for Web3** - but instead of paying creators with your money, you support them with **yield**. Your principal stays yours, creators get supported, and you unlock exclusive content.
-
-### How It Works (The Simple Version)
-
-1. **Deposit Your Money**: Deposit USDC (or any stablecoin) from any chain
-   - This is **YOUR money** - you keep it, you can withdraw it anytime
-   - Your deposit earns yield automatically (~5% APY)
-
-2. **Select Creators**: Choose creators to support (like subscribing on Patreon)
-   - Each creator can offer exclusive content
-   - You can support multiple creators
-
-3. **Yield Supports Creators**: OnlyYield automatically distributes your **yield** to creators
-   - Your principal stays untouched
-   - Creators receive yield on their preferred chain
-   - Distribution happens automatically
-
-4. **Get Exclusive Content**: Creators grant you access to exclusive content
-   - Just like Patreon subscriptions
-   - Access is tied to your support (yield distribution)
-
-5. **Withdraw Anytime**: Need your money back? Withdraw your principal anytime
-   - Your principal is always yours
-   - Withdrawing stops yield distribution (like canceling a Patreon subscription)
-
-### Key Features
-
-**1. Principal Preservation**
-- Your deposit stays yours - withdraw anytime
-- Only yield is distributed to creators
-- Like Patreon, but you keep your "subscription fee" money
-
-**2. Automated Yield Distribution**
-- Set it and forget it - yield distributes automatically
-- No manual steps, no gas fees for each distribution
-- Creators receive yield on their preferred chain
-
-**3. Cross-Chain Support**
-- Deposit from Ethereum, Polygon, Arbitrum, Optimism, or Base
-- Creators receive yield on their preferred chain
-- One-click deposits via LI.FI Composer
-
-**4. AI-Powered Yield Optimization**
-- Our AI agent maximizes your yield across multiple stablecoins
-- Better yield = more support for creators
-- Automatic rebalancing via LI.FI swaps
-
-**5. Exclusive Content Access**
-- Creators can offer exclusive content to supporters
-- Access is tied to active yield distribution
-- Like Patreon tiers, but powered by yield
-
-**6. Promotes Healthy Financial Habits**
-- Instead of spending money on subscriptions, you invest it
-- Your money works for you while supporting creators
-- Builds long-term wealth while enjoying content
-- Teaches investment-based approach to recurring expenses
-
----
-
 ## How It All Works
 
 <img width="1442" height="756" alt="Screenshot 2026-02-07 at 1 16 39 AM" src="https://github.com/user-attachments/assets/bba876a2-9c0a-4934-b9ae-57e2980d910b" />
@@ -1086,31 +1024,6 @@ const routeRequest = {
 - **Future-Proof**: Easy to add new DEXs
 
 **Agent Decision JSON**: See [`agent/llm_decision_history.json`](./agent/llm_decision_history.json)
-
----
-
-## How It All Works
-
-<img width="1442" height="756" alt="Screenshot 2026-02-07 at 1 16 39 AM" src="https://github.com/user-attachments/assets/a626ddcd-2586-4468-921f-8533f1a19b82" />
-
-*Complete end-to-end flow of the OnlyYield platform, from user deposit to yield distribution and principal withdrawal.*
-
-**Complete Flow:**
-
-```
-1. User (Ethereum) → LI.FI Bridge → Base → YieldStrategy → YieldVault → Aave V3
-2. Yield accrues on aTokens
-3. AI Agent monitors APY → Decides allocation → Swaps via LI.FI → Deposits
-4. Operator harvests yield → Claims per-user yield → Distributes
-5. Recipients receive yield on preferred chains via LI.FI bridges
-```
-
-**Key Technologies:**
-- **LI.FI**: Cross-chain bridging and token swaps
-- **Aave V3**: Yield generation
-- **GPT-4**: AI-powered allocation decisions
-- **ERC-4626**: Standardized vault interface
-- **Per-User Tracking**: Fair yield distribution
 
 ---
 
